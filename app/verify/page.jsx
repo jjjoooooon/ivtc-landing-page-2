@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, Suspense } from "react";
 import { ShieldCheck } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import VerifyForm from "../../components/Verify/VerifyForm";
 
-const CertificateValidatorPage = () => {
+const CertificateValidatorContent = () => {
+  const searchParams = useSearchParams();
+  const initialCode = searchParams.get("code") || "";
+
   const headerContent = useMemo(() => (
     <header className="text-center mt-10 mb-10 md:mb-14 space-y-4">
       <div className="flex justify-center mb-6">
@@ -35,12 +39,20 @@ const CertificateValidatorPage = () => {
   ), []);
 
   return (
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-28 md:pt-40 pb-20">
+      {headerContent}
+      <VerifyForm initialCode={initialCode} />
+      {footerContent}
+    </div>
+  );
+};
+
+const CertificateValidatorPage = () => {
+  return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-[#0a0a0a] transition-colors">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-28 md:pt-40 pb-20">
-        {headerContent}
-        <VerifyForm />
-        {footerContent}
-      </div>
+      <Suspense fallback={<div className="pt-40 text-center">Loading verification portal...</div>}>
+        <CertificateValidatorContent />
+      </Suspense>
     </div>
   );
 };

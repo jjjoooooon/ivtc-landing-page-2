@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import {
   Search,
   CheckCircle2,
@@ -13,17 +13,19 @@ import {
   BookOpen,
   Loader2,
   ShieldCheck,
+  Link,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
-const VerifyForm = () => {
+const VerifyForm = ({ initialCode = "" }) => {
   const inputRef = useRef(null);
   const resultRef = useRef(null);
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
-  const handleValidate = useCallback(async (e) => {
-    e.preventDefault();
-    const code = inputRef.current?.value?.trim().toUpperCase();
+  const handleValidate = useCallback(async (e, codeOverride = null) => {
+    if (e) e.preventDefault();
+    const code = codeOverride || inputRef.current?.value?.trim().toUpperCase();
     if (!code) return;
 
     setStatus("loading");
@@ -57,13 +59,41 @@ const VerifyForm = () => {
     setStatus("idle");
     resultRef.current = null;
     if (inputRef.current) inputRef.current.value = "";
+    // Clear URL params if resetting
+    window.history.replaceState({}, "", "/verify");
   }, []);
 
-  const handleCopyId = useCallback(() => {
-    if (resultRef.current?.verification_code) {
-      navigator.clipboard.writeText(resultRef.current.verification_code);
+  const handleShare = useCallback(async () => {
+    if (!resultRef.current?.verification_code) return;
+
+    const shareUrl = `${window.location.origin}/verify?code=${resultRef.current.verification_code}`;
+    const shareData = {
+      title: "IVTC Certificate Verification",
+      text: `Verified Certificate for ${resultRef.current.full_name} at IVTC Campus.`,
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Verification link copied to clipboard!");
+      }
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Error sharing:", error);
+        toast.error("Failed to share link");
+      }
     }
   }, []);
+
+  useEffect(() => {
+    if (initialCode) {
+      if (inputRef.current) inputRef.current.value = initialCode;
+      handleValidate(null, initialCode);
+    }
+  }, [initialCode, handleValidate]);
 
   const maskNIC = (nic) => {
     if (!nic) return "";
@@ -164,13 +194,14 @@ const VerifyForm = () => {
                 Authenticity Verified
               </span>
             </div>
-            <button 
-              onClick={handleCopyId}
-              className="text-white/70 hover:text-white text-xs font-mono transition-colors flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/10"
+            <Button 
+              variant="secondary"
+              onClick={handleShare}
+              className="bg-white/10 hover:bg-white/20 text-white border-white/10 rounded-full h-8 px-4 flex items-center gap-2 transition-all backdrop-blur-md"
             >
-              {resultRef.current.verification_code}
+              <span className="text-[10px] font-bold uppercase tracking-wider">Share Certificate</span>
               <Share2 size={12} />
-            </button>
+            </Button>
           </div>
 
           <div className="p-8 md:p-12 space-y-10">
@@ -196,6 +227,13 @@ const VerifyForm = () => {
                 >
                   <Download size={18} className="text-[#002147] dark:text-blue-400" />
                   Download PDF
+                </Button>
+                <Button
+                  onClick={handleShare}
+                  className="rounded-2xl h-12 px-6 bg-[#002147] hover:bg-[#003366] text-white font-bold flex items-center gap-2 transition-all hover:shadow-lg"
+                >
+                  <Link size={18} />
+                  Share Link
                 </Button>
               </div>
             </div>

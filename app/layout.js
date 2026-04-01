@@ -1,6 +1,7 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./providers/theme-provider";
+import { Toaster } from "sonner";
 
 import SocialSidebar from "./Components/SocialSidebar";
 import WhatsAppButton from "./Components/WhatsAppButton";
@@ -57,6 +58,7 @@ export default function RootLayout({ children }) {
         >
           <Navbar />
           <SocialSidebar />
+          <Toaster position="top-center" richColors />
           {/* <WhatsAppButton /> */}
           <main className="min-h-screen">
             {children}
