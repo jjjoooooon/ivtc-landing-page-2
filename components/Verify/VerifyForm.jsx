@@ -17,11 +17,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import VerifyPreloader from "./VerifyPreloader";
 
-const VerifyForm = ({ initialCode = "" }) => {
+const VerifyForm = ({ initialCode = "", initialResult = null }) => {
   const inputRef = useRef(null);
   const resultRef = useRef(null);
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [showPreloader, setShowPreloader] = useState(!!initialCode);
+  const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
 
   const handleValidate = useCallback(async (e, codeOverride = null) => {
     if (e) e.preventDefault();
@@ -91,9 +94,37 @@ const VerifyForm = ({ initialCode = "" }) => {
   useEffect(() => {
     if (initialCode) {
       if (inputRef.current) inputRef.current.value = initialCode;
-      handleValidate(null, initialCode);
+      
+      const startValidation = async () => {
+        const startTime = Date.now();
+        
+        // If we already have initialResult from SSR, just use it
+        if (initialResult) {
+          if (initialResult.status === "success") {
+            resultRef.current = initialResult.data;
+            setStatus("success");
+          } else {
+            resultRef.current = null;
+            setStatus("error");
+          }
+        } else {
+          // Fallback to client-side fetch if for some reason SSR didn't happen
+          await handleValidate(null, initialCode);
+        }
+
+        const endTime = Date.now();
+        const minDuration = 2000;
+        const elapsed = endTime - startTime;
+        const remaining = Math.max(0, minDuration - elapsed);
+
+        setTimeout(() => {
+          setIsPreloaderComplete(true);
+        }, remaining);
+      };
+
+      startValidation();
     }
-  }, [initialCode, handleValidate]);
+  }, [initialCode, initialResult, handleValidate]);
 
   const maskNIC = (nic) => {
     if (!nic) return "";
@@ -147,8 +178,15 @@ const VerifyForm = ({ initialCode = "" }) => {
   }, [status]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 md:px-0">
-      {/* --- SEARCH FORM --- */}
+    <>
+      {showPreloader && (
+        <VerifyPreloader 
+          isComplete={isPreloaderComplete} 
+          onFadeComplete={() => setShowPreloader(false)} 
+        />
+      )}
+      <div className={`max-w-2xl mx-auto px-4 md:px-0 transition-all duration-1000 ${showPreloader ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}`}>
+        {/* --- SEARCH FORM --- */}
       <form onSubmit={handleValidate} className="mb-12 relative flex flex-col md:block">
         <div className="relative group w-full">
           <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#002147] transition-colors pointer-events-none">
@@ -301,7 +339,8 @@ const VerifyForm = ({ initialCode = "" }) => {
           </button>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
