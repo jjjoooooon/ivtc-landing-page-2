@@ -185,6 +185,7 @@ const VerifyForm = ({ initialCode = "", initialResult = null }) => {
           onFadeComplete={() => setShowPreloader(false)} 
         />
       )}
+      
       <div className={`max-w-2xl mx-auto px-4 md:px-0 transition-all duration-1000 ${showPreloader ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}`}>
         {/* --- SEARCH FORM --- */}
         <form onSubmit={handleValidate} className="mb-12 relative flex flex-col md:block">
