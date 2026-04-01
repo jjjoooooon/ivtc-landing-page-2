@@ -21,29 +21,36 @@ const VerifyForm = () => {
   const resultRef = useRef(null);
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
-  const handleValidate = useCallback((e) => {
+  const handleValidate = useCallback(async (e) => {
     e.preventDefault();
-    const id = inputRef.current?.value?.trim().toUpperCase();
-    if (!id) return;
+    const code = inputRef.current?.value?.trim().toUpperCase();
+    if (!code) return;
 
     setStatus("loading");
 
-    // Mock Validation Logic - In a real app, this would be an API call
-    setTimeout(() => {
-      if (id === "IVTC-2026-X89") {
-        resultRef.current = {
-          certId: id,
-          studentName: "Dulaj Nimansha",
-          course: "CCNA 200-301 Enterprise Networking",
-          issueDate: "January 15, 2026",
-          grade: "Distinction",
-        };
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/certifications/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ verification_code: code }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        resultRef.current = result.data;
         setStatus("success");
       } else {
         resultRef.current = null;
         setStatus("error");
       }
-    }, 1500);
+    } catch (error) {
+      console.error("Verification error:", error);
+      resultRef.current = null;
+      setStatus("error");
+    }
   }, []);
 
   const handleReset = useCallback(() => {
@@ -53,37 +60,61 @@ const VerifyForm = () => {
   }, []);
 
   const handleCopyId = useCallback(() => {
-    if (resultRef.current?.certId) {
-      navigator.clipboard.writeText(resultRef.current.certId);
-      // Subtle feedback could be added here
+    if (resultRef.current?.verification_code) {
+      navigator.clipboard.writeText(resultRef.current.verification_code);
     }
   }, []);
+
+  const maskNIC = (nic) => {
+    if (!nic) return "";
+    if (nic.length < 5) return nic;
+    return `${nic.slice(0, 4)}xxxx${nic.slice(-2)}`;
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   const detailsGrid = useMemo(() => {
     if (!resultRef.current) return [];
     return [
       {
-        label: "Course Completed",
-        value: resultRef.current.course,
+        label: "Enrollment Number",
+        value: resultRef.current.entrol_number,
+        Icon: User,
+      },
+      {
+        label: "Course Code",
+        value: resultRef.current.course_code,
         Icon: BookOpen,
       },
       {
-        label: "Issue Date",
-        value: resultRef.current.issueDate,
+        label: "Issue Period",
+        value: `${formatDate(resultRef.current.starting_date)} - ${formatDate(resultRef.current.ending_date)}`,
         Icon: Calendar,
       },
       {
-        label: "Academic Standing",
-        value: resultRef.current.grade,
+        label: "Certificate Number",
+        value: resultRef.current.certificate_number,
         Icon: Award,
       },
       {
-        label: "Certificate ID",
-        value: resultRef.current.certId,
+        label: "NIC Number",
+        value: maskNIC(resultRef.current.nic),
+        Icon: ShieldCheck,
+      },
+      {
+        label: "Verification Code",
+        value: resultRef.current.verification_code,
         Icon: ShieldCheck,
       },
     ];
-  }, [status]); // Re-compute when status changes to 'success'
+  }, [status]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-0">
@@ -137,7 +168,7 @@ const VerifyForm = () => {
               onClick={handleCopyId}
               className="text-white/70 hover:text-white text-xs font-mono transition-colors flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/10"
             >
-              {resultRef.current.certId}
+              {resultRef.current.verification_code}
               <Share2 size={12} />
             </button>
           </div>
@@ -150,7 +181,7 @@ const VerifyForm = () => {
                   Official Record
                 </div>
                 <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                  {resultRef.current.studentName}
+                  {resultRef.current.full_name}
                 </h2>
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                   <User size={18} className="shrink-0 opacity-60" />
@@ -196,19 +227,13 @@ const VerifyForm = () => {
             {/* Trust Footer */}
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
               <div className="flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white dark:border-[#111] bg-slate-100 dark:bg-white/10" />
-                  ))}
-                </div>
                 <p className="text-xs font-semibold text-slate-400">
                   Verified by IVTC Academic Council
                 </p>
               </div>
               <div className="h-px grow bg-slate-100 dark:bg-white/5 hidden sm:block mx-4" />
-              <div className="flex items-center gap-2 opacity-30 select-none grayscale">
-                <div className="w-8 h-8 bg-slate-400 rounded-full" />
-                <div className="w-12 h-4 bg-slate-400 rounded-sm" />
+              <div className="text-[10px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-widest pointer-events-none select-none">
+                Official Validation Portal
               </div>
             </div>
           </div>
