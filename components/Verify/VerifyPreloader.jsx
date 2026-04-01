@@ -44,23 +44,22 @@ const VerifyPreloader = ({ isComplete = false, onFadeComplete }) => {
       <div className="absolute inset-0 bg-[#002147]/5 dark:bg-blue-500/5 blur-[120px] animate-pulse" />
 
       <div className="relative flex flex-col items-center justify-center">
-        {/* Main Icon with Subtle Pulse */}
-        <div className="relative p-10 rounded-[2.5rem] bg-[#002147] text-white shadow-2xl shadow-[#002147]/20 flex items-center justify-center transition-transform hover:scale-105 active:scale-95">
-          <ShieldCheck size={56} strokeWidth={1.5} className="animate-pulse" />
+        <div className="relative bg-[#002147] p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] text-white shadow-2xl shadow-[#002147]/20 flex items-center justify-center transition-transform hover:scale-105 active:scale-95">
+          <ShieldCheck size={40} strokeWidth={1.5} className="sm:size-14 animate-pulse" />
           
           {/* Internal Progress Ring */}
-          <div className="absolute inset-2 border-2 border-white/10 rounded-[2rem] animate-[spin_10s_linear_infinite]" />
+          <div className="absolute inset-2 border-2 border-white/10 rounded-[1.2rem] sm:rounded-[2rem] animate-[spin_10s_linear_infinite]" />
         </div>
 
         {/* Status Typography */}
-        <div className="mt-12 flex flex-col items-center gap-4">
-          <div className="flex items-center gap-3">
-            <Loader2 className="animate-spin text-[#002147] dark:text-blue-400" size={16} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#002147]/40 dark:text-blue-400/40">
+        <div className="mt-8 sm:mt-12 flex flex-col items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Loader2 className="animate-spin text-[#002147] dark:text-blue-400" size={14} />
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[#002147]/40 dark:text-blue-400/40">
               Validating
             </span>
           </div>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-white tracking-tight">
             Secure Certification Portal
           </h2>
         </div>

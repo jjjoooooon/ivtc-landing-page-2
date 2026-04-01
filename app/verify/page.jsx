@@ -38,13 +38,13 @@ const CertificateValidatorPage = async ({ searchParams }) => {
           <ShieldCheck size={28} />
         </div>
       </div>
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
+      <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
         Verify Your{" "}
         <span className="text-[#002147] dark:text-blue-400">
           Certificate
         </span>
       </h1>
-      <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed max-w-md mx-auto">
+      <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed max-w-md mx-auto">
         Enter your unique Certificate ID to instantly confirm the
         authenticity of your IVTC qualification.
       </p>
@@ -52,7 +52,7 @@ const CertificateValidatorPage = async ({ searchParams }) => {
   );
 
   const footerContent = (
-    <p className="mt-10 text-center text-xs text-slate-400 leading-relaxed">
+    <p className="mt-10 text-center text-[10px] sm:text-xs text-slate-400 leading-relaxed px-4">
       The IVTC Online Validation System provides secure confirmation of
       academic credentials.
       <br className="hidden sm:block" />

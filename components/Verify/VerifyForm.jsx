@@ -223,59 +223,59 @@ const VerifyForm = ({ initialCode = "", initialResult = null }) => {
         {status === "success" && resultRef.current && (
           <div className="bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-[2.5rem] border border-white/20 dark:border-white/10 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
             {/* Top Banner with Animated Pulse */}
-            <div className="bg-linear-to-r from-[#002147] to-[#004080] py-4 px-8 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-green-400 blur-md opacity-50 animate-pulse rounded-full" />
-                  <CheckCircle2 size={18} className="text-green-400 relative z-10" />
-                </div>
-                <span className="text-white text-sm font-bold tracking-wide uppercase">
-                  Authenticity Verified
-                </span>
+          <div className="bg-linear-to-r from-[#002147] to-[#004080] py-3 px-5 sm:py-4 sm:px-8 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="relative shrink-0">
+                <div className="absolute inset-0 bg-green-400 blur-md opacity-50 animate-pulse rounded-full" />
+                <CheckCircle2 size={16} className="sm:size-[18px] text-green-400 relative z-10" />
               </div>
-              <Button 
-                variant="secondary"
-                onClick={handleShare}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/10 rounded-full h-8 px-4 flex items-center gap-2 transition-all backdrop-blur-md"
-              >
-                <span className="text-[10px] font-bold uppercase tracking-wider">Share Certificate</span>
-                <Share2 size={12} />
-              </Button>
+              <span className="text-white text-[10px] sm:text-sm font-bold tracking-wide uppercase truncate">
+                Authenticity Verified
+              </span>
             </div>
+            <Button 
+              variant="secondary"
+              onClick={handleShare}
+              className="bg-white/10 hover:bg-white/20 text-white border-white/10 rounded-full h-7 sm:h-8 px-3 sm:px-4 flex items-center gap-1.5 sm:gap-2 transition-all backdrop-blur-md shrink-0"
+            >
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">Share</span>
+              <Share2 size={10} className="sm:size-[12px]" />
+            </Button>
+          </div>
 
-            <div className="p-8 md:p-12 space-y-10">
+              <div className="p-6 sm:p-8 md:p-12 space-y-8 sm:space-y-10">
               {/* Student identity section */}
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                     Official Record
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                     {resultRef.current.full_name}
                   </h2>
                   <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                    <User size={18} className="shrink-0 opacity-60" />
-                    <span className="text-sm font-medium">Verified Certificate Holder</span>
+                    <User size={16} className="shrink-0 opacity-60 sm:size-[18px]" />
+                    <span className="text-xs sm:text-sm font-medium">Verified Certificate Holder</span>
                   </div>
                 </div>
               </div>
 
-              {/* Structured Details with Glass Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-slate-100 dark:border-white/5">
+                {/* Structured Details with Glass Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-slate-100 dark:border-white/5">
                 {detailsGrid.map(({ label, value, Icon }) => (
                   <div 
                     key={label} 
-                    className="p-5 rounded-2xl bg-slate-50/50 dark:bg-white/2 border border-slate-100 dark:border-white/5 group hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
+                    className="p-4 sm:p-5 rounded-2xl bg-slate-50/50 dark:bg-white/2 border border-slate-100 dark:border-white/5 group hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-xl bg-white dark:bg-white/5 shadow-sm text-[#002147] dark:text-blue-400 group-hover:scale-110 transition-transform duration-500">
-                        <Icon size={20} />
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-white/5 shadow-sm text-[#002147] dark:text-blue-400 group-hover:scale-110 transition-transform duration-500 shrink-0">
+                        <Icon size={18} className="sm:size-5" />
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                      <div className="space-y-0.5 sm:space-y-1 overflow-hidden">
+                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                           {label}
                         </p>
-                        <p className="text-slate-900 dark:text-white font-bold leading-tight">
+                        <p className="text-sm sm:text-base text-slate-900 dark:text-white font-bold leading-tight truncate">
                           {value}
                         </p>
                       </div>
@@ -284,15 +284,15 @@ const VerifyForm = ({ initialCode = "", initialResult = null }) => {
                 ))}
               </div>
 
-              {/* Trust Footer */}
+                {/* Trust Footer */}
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-                <div className="flex items-center gap-4">
-                  <p className="text-xs font-semibold text-slate-400">
+                <div className="flex items-center gap-3">
+                  <p className="text-[10px] sm:text-xs font-semibold text-slate-400">
                     Verified by IVTC Academic Council
                   </p>
                 </div>
                 <div className="h-px grow bg-slate-100 dark:bg-white/5 hidden sm:block mx-4" />
-                <div className="text-[10px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-widest pointer-events-none select-none">
+                <div className="text-[9px] sm:text-[10px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-widest pointer-events-none select-none">
                   Official Validation Portal
                 </div>
               </div>
