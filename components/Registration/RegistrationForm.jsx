@@ -14,7 +14,7 @@ const RegistrationForm = ({ isVisible }) => {
 
   const [formData, setFormData] = useState({
     fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
-    dob: "", gender: "", address: "", city: "", district: "",
+    dob: new Date().toISOString().split('T')[0], gender: "", address: "", city: "", district: "",
     postalCode: "", program: "", school: "",
     registrationType: "course",
   });
