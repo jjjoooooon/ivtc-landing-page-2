@@ -1,16 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { User, Mail, Phone, GraduationCap, FileText, Globe, ArrowRight, Calendar as CalendarIcon, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import InputField from "./InputField";
 import CustomSelect from "./CustomSelect";
 import PhoneInput from "./PhoneInput";
@@ -19,11 +11,10 @@ import { COUNTRIES } from "./CountriesData";
 
 const RegistrationForm = ({ isVisible }) => {
   const [activeForm, setActiveForm] = useState("course");
-  const [date, setDate] = useState();
 
   const [formData, setFormData] = useState({
     fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
-    gender: "", address: "", city: "", district: "",
+    dob: "", gender: "", address: "", city: "", district: "",
     postalCode: "", program: "", school: "",
     registrationType: "course",
   });
@@ -125,34 +116,15 @@ const RegistrationForm = ({ isVisible }) => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2.5 flex flex-col">
-              <label className="text-sm font-semibold text-slate-600 dark:text-slate-400">
-                Date of Birth
-              </label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-medium h-12 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-sm transition-all",
-                      !date && "text-slate-400"
-                    )}
-                  >
-                    <CalendarIcon className="mr-3 h-4 w-4 text-slate-400" />
-                    {date ? format(date, "PPP") : <span>Birth Date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 rounded-xl shadow-2xl border-white/10 overflow-hidden" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                    className="bg-white dark:bg-[#0a0a0a]"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <InputField
+              label="Date of Birth"
+              name="dob"
+              type="date"
+              icon={CalendarIcon}
+              value={formData.dob}
+              onChange={handleInputChange}
+              required
+            />
             <CustomSelect
               label="Gender"
               icon={Users}
