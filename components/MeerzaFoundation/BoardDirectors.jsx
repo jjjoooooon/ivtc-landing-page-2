@@ -17,13 +17,13 @@ const BoardDirectors = () => {
   const directors = useMemo(() => DIRECTORS, []);
 
   return (
-    <section className="bg-slate-50 dark:bg-[#0d0d0d] border-t border-slate-200 dark:border-white/5 overflow-hidden" aria-labelledby="leadership-heading">
+    <section className="bg-slate-50 dark:bg-[#0d0d0d] border-t border-slate-200 dark:border-white/5" aria-labelledby="leadership-heading">
       <div className="max-w-7xl mx-auto px-6 py-24">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
           
           {/* Sticky Left Column */}
           <div className="lg:w-1/3">
-            <ScrollReveal className="sticky top-32">
+            <ScrollReveal className="lg:sticky lg:top-32">
               <h2 id="leadership-heading" className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-[1.1] text-slate-900 dark:text-white">
                 Board Of <br /> Directors.
               </h2>

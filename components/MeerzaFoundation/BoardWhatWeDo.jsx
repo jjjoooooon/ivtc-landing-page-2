@@ -55,13 +55,13 @@ const BoardWhatWeDo = () => {
   const pillars = useMemo(() => MISSION_PILLARS, []);
 
   return (
-    <section className="bg-white dark:bg-[#0a0a0a] relative overflow-hidden" aria-labelledby="foundation-purpose-heading">
+    <section className="bg-white dark:bg-[#0a0a0a] relative" aria-labelledby="foundation-purpose-heading">
       <div className="max-w-7xl mx-auto px-6 py-24">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
           
           {/* Sticky Left Column - Institute Heading Style */}
           <div className="lg:w-1/3">
-            <ScrollReveal className="sticky top-32">
+            <ScrollReveal className="lg:sticky lg:top-32">
               <h2 id="foundation-purpose-heading" className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-[1.1] text-slate-900 dark:text-white">
                 Our Core <br /> Initiatives.
               </h2>
