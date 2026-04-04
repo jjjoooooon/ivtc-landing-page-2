@@ -6,28 +6,24 @@ import CourseGrid from "../../components/CourseCategories/CourseGrid";
 const pathways = [
   {
     title: "Certifications",
-    tags: ["CCNA", "CompTIA"],
     desc: "Accelerated industry programs for immediate impact.",
     icon: <Globe size={28} />,
     color: "bg-[#002147]",
   },
   {
     title: "Diplomas",
-    tags: ["HNDIT", "BIT"],
     desc: "Structured academic excellence bridging the gap.",
     icon: <GraduationCap size={28} />,
     color: "bg-blue-800",
   },
   {
     title: "After A/L",
-    tags: ["Foundation", "CS"],
     desc: "Start your journey right after school with experts.",
     icon: <Zap size={28} />,
     color: "bg-[#003366]",
   },
   {
     title: "AL ICT Classes",
-    tags: ["Local", "Cambridge"],
     desc: "Master the syllabus with highest-ranked instructors.",
     icon: <BookOpen size={28} />,
     color: "bg-blue-900",

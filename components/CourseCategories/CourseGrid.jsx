@@ -2,7 +2,6 @@
 
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import ShineBadge from "@/components/ui/ShineBadge";
 
 const CourseGrid = ({ pathways }) => {
   return (
@@ -15,16 +14,6 @@ const CourseGrid = ({ pathways }) => {
           <div className="relative z-10">
             <div className="icon-wrapper w-14 h-14 rounded-2xl border border-slate-200 dark:border-white/10 flex items-center justify-center text-[#002147] dark:text-blue-400 mb-8 transition-all duration-300 group-hover:bg-[#002147] group-hover:text-white dark:group-hover:bg-blue-400 dark:group-hover:text-[#002147]">
               {item.icon}
-            </div>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {item.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[9px] px-2 py-0.5 font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full border border-slate-200/50 dark:border-white/5"
-                >
-                  {tag}
-                </span>
-              ))}
             </div>
             <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-[#002147] dark:group-hover:text-blue-400 transition-colors duration-300">
               {item.title}
