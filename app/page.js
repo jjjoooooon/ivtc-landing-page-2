@@ -17,7 +17,7 @@ export default function Home() {
       {/* <CampusStats /> */}
       <UpcomingCourses />
       <CoursePathways />
-      <LMSLogin />
+      {/* <LMSLogin /> */}
       <StudentRegistration />
     </>
   );
