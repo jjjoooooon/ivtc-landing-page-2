@@ -13,14 +13,15 @@ import {
 } from "@/components/ui/popover";
 import InputField from "./InputField";
 import CustomSelect from "./CustomSelect";
-import { REGISTRATION_TYPES, SRI_LANKA_DISTRICTS, COURSES } from "./RegistrationData";
+import PhoneInput from "./PhoneInput";
+import { REGISTRATION_TYPES, SRI_LANKA_DISTRICTS, COURSES, COUNTRIES } from "./RegistrationData";
 
 const RegistrationForm = ({ isVisible }) => {
   const [activeForm, setActiveForm] = useState("course");
   const [date, setDate] = useState();
 
   const [formData, setFormData] = useState({
-    fullName: "", email: "", phone: "", nic: "",
+    fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
     gender: "", address: "", city: "", district: "",
     postalCode: "", program: "", school: "",
     registrationType: "course",
@@ -162,12 +163,9 @@ const RegistrationForm = ({ isVisible }) => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <InputField
+            <PhoneInput
               label="WhatsApp / Phone"
               name="phone"
-              type="tel"
-              placeholder="+94"
-              icon={Phone}
               value={formData.phone}
               onChange={handleInputChange}
               required
