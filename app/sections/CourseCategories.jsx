@@ -2,7 +2,6 @@ import React from "react";
 import { BookOpen, GraduationCap, Zap, Globe } from "lucide-react";
 import ShineBadge from "@/components/ui/ShineBadge";
 import CourseGrid from "../../components/CourseCategories/CourseGrid";
-import ScrollReveal from "../../components/Animations/ScrollReveal";
 
 const pathways = [
   {
@@ -38,7 +37,7 @@ const pathways = [
 const CoursePathways = () => {
   return (
     <section className="py-18 bg-transparent overflow-hidden">
-      <ScrollReveal className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <header className="">
           <ShineBadge className="mb-4">
             Upcoming Intakes — 2026
@@ -56,7 +55,7 @@ const CoursePathways = () => {
         </header>
 
         <CourseGrid pathways={pathways} />
-      </ScrollReveal>
+      </div>
     </section>
   );
 };
