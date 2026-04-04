@@ -49,12 +49,12 @@ const RegistrationForm = ({ isVisible }) => {
         onSubmit={(e) => { e.preventDefault(); alert("Application Received!"); }}
         className="space-y-6 md:space-y-8"
       >
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-[#002147] dark:text-blue-400 border-b border-[#002147]/20 dark:border-blue-400/20 pb-0.5 w-fit">
+            <label className="text-sm font-bold text-[#002147] dark:text-blue-400 border-b-2 border-[#002147]/20 dark:border-blue-400/20 pb-1 w-fit uppercase tracking-wider">
               Step 01. Select Pathway
             </label>
-            <span className="text-[10px] font-bold text-slate-400 italic text-right">Target: {activeTypeData.title}</span>
+            <span className="text-xs font-bold text-slate-400 italic text-right">Target: {activeTypeData.title}</span>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {REGISTRATION_TYPES.map((type) => (
@@ -78,13 +78,13 @@ const RegistrationForm = ({ isVisible }) => {
                   </div>
                   <div className="overflow-hidden">
                     <h4 className={cn(
-                      "text-xs font-medium leading-tight truncate",
+                      "text-sm font-semibold leading-tight truncate",
                       activeForm === type.id ? "text-white" : "text-slate-900 dark:text-white"
                     )}>
                       {type.title}
                     </h4>
                     <span className={cn(
-                      "text-[10px] font-medium truncate block mt-0.5",
+                      "text-xs font-medium truncate block mt-1",
                       activeForm === type.id ? "text-white/50" : "text-slate-400"
                     )}>
                       {type.tags[0]}
@@ -96,12 +96,12 @@ const RegistrationForm = ({ isVisible }) => {
           </div>
         </div>
 
-        <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-white/5">
-          <label className="text-sm font-semibold text-[#002147] dark:text-blue-400 border-b border-[#002147]/20 dark:border-blue-400/20 pb-0.5 w-fit">
+        <div className="space-y-8 pt-6 border-t border-slate-100 dark:border-white/5">
+          <label className="text-base font-bold text-[#002147] dark:text-blue-400 border-b-2 border-[#002147]/20 dark:border-blue-400/20 pb-1 w-fit uppercase tracking-wider">
             Step 02. Personal & Academic Details
           </label>
 
-          <div className="grid md:grid-cols-2 gap-5 mt-3">
+          <div className="grid md:grid-cols-2 gap-6 mt-4">
             <InputField
               label="Full Name"
               name="fullName"
@@ -122,9 +122,9 @@ const RegistrationForm = ({ isVisible }) => {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
-            <div className="space-y-2 flex flex-col">
-              <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2.5 flex flex-col">
+              <label className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                 Date of Birth
               </label>
               <Popover>
@@ -161,7 +161,7 @@ const RegistrationForm = ({ isVisible }) => {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid md:grid-cols-2 gap-6">
             <InputField
               label="WhatsApp / Phone"
               name="phone"
@@ -184,7 +184,7 @@ const RegistrationForm = ({ isVisible }) => {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid md:grid-cols-2 gap-6">
             <CustomSelect
               label="District"
               icon={Globe}
@@ -204,7 +204,7 @@ const RegistrationForm = ({ isVisible }) => {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid md:grid-cols-2 gap-6">
             <CustomSelect
               label={`${activeTypeData.title} Program`}
               icon={GraduationCap}
