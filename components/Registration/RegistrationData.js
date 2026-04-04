@@ -39,17 +39,6 @@ export const SRI_LANKA_DISTRICTS = [
     "Moneragala", "Ratnapura", "Kegalle",
 ];
 
-export const COUNTRIES = [
-    { name: "Sri Lanka", code: "+94", flag: "🇱🇰" },
-    { name: "UAE", code: "+971", flag: "🇦🇪" },
-    { name: "Qatar", code: "+974", flag: "🇶🇦" },
-    { name: "Saudi Arabia", code: "+966", flag: "🇸🇦" },
-    { name: "UK", code: "+44", flag: "🇬🇧" },
-    { name: "Australia", code: "+61", flag: "🇦🇺" },
-    { name: "USA", code: "+1", flag: "🇺🇸" },
-    { name: "Canada", code: "+1", flag: "🇨🇦" },
-];
-
 export const COURSES = {
     course: ["Software Engineering", "Data Science", "Cyber Security", "Cloud Computing", "Web Development", "Mobile App Development"],
     al: ["A/L ICT Regular", "A/L ICT Revision", "Practical Sessions"],

@@ -14,7 +14,8 @@ import {
 import InputField from "./InputField";
 import CustomSelect from "./CustomSelect";
 import PhoneInput from "./PhoneInput";
-import { REGISTRATION_TYPES, SRI_LANKA_DISTRICTS, COURSES, COUNTRIES } from "./RegistrationData";
+import { REGISTRATION_TYPES, SRI_LANKA_DISTRICTS, COURSES } from "./RegistrationData";
+import { COUNTRIES } from "./CountriesData";
 
 const RegistrationForm = ({ isVisible }) => {
   const [activeForm, setActiveForm] = useState("course");
