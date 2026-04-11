@@ -1,43 +1,98 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { User, Mail, Phone, GraduationCap, FileText, Globe, ArrowRight, Calendar as CalendarIcon, Users } from "lucide-react";
+import { User, Mail, Phone, GraduationCap, FileText, Globe, ArrowRight, Calendar as CalendarIcon, Users, BookOpen } from "lucide-react";
 import InputField from "./InputField";
 import CustomSelect from "./CustomSelect";
 import PhoneInput from "./PhoneInput";
-import { REGISTRATION_TYPES, SRI_LANKA_DISTRICTS, COURSES } from "./RegistrationData";
+import { SRI_LANKA_DISTRICTS } from "./RegistrationData";
 import { COUNTRIES } from "./CountriesData";
 
 const RegistrationForm = ({ isVisible }) => {
-  const [activeForm, setActiveForm] = useState("course");
+  const [pathways, setPathways] = useState([]);
+  const [programs, setPrograms] = useState([]);
+  const [isLoadingPathways, setIsLoadingPathways] = useState(true);
+  const [isLoadingPrograms, setIsLoadingPrograms] = useState(false);
+  const [activeForm, setActiveForm] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
     dob: new Date().toISOString().split('T')[0], gender: "", address: "", city: "", district: "",
-    postalCode: "", program: "", school: "",
-    registrationType: "course",
+    postalCode: "", program: "", pathwayId: "", programId: "", school: "",
+    registrationType: "",
   });
+
+  useEffect(() => {
+    const fetchPathways = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/pathways`);
+        const result = await response.json();
+        if (result.status === "success") {
+          setPathways(result.data);
+          // Auto-select first pathway if available
+          if (result.data.length > 0) {
+            handlePathwayChange(result.data[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching pathways:", error);
+      } finally {
+        setIsLoadingPathways(false);
+      }
+    };
+
+    fetchPathways();
+  }, []);
+
+  const fetchPrograms = async (pathwayId) => {
+    setIsLoadingPrograms(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/registration/programs/${pathwayId}`);
+      const result = await response.json();
+      if (result.status === "success") {
+        setPrograms(result.data.programs);
+      }
+    } catch (error) {
+      console.error("Error fetching programs:", error);
+    } finally {
+      setIsLoadingPrograms(false);
+    }
+  };
+
+  const handlePathwayChange = (pathway) => {
+    setActiveForm(pathway.id);
+    setFormData((prev) => ({
+      ...prev,
+      registrationType: pathway.name,
+      pathwayId: pathway.id,
+      program: "",
+      programId: ""
+    }));
+    fetchPrograms(pathway.id);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleTypeChange = (typeId) => {
-    setActiveForm(typeId);
-    setFormData((prev) => ({ ...prev, registrationType: typeId, program: "" }));
-  };
-
   const activeTypeData = useMemo(() =>
-    REGISTRATION_TYPES.find((t) => t.id === activeForm) || REGISTRATION_TYPES[0],
-    [activeForm]
+    pathways.find((p) => p.id === activeForm) || { name: "Pathway", description: "" },
+    [activeForm, pathways]
   );
+
+  const getPathwayIcon = (slug = "") => {
+    if (slug.includes('al')) return BookOpen;
+    if (slug.includes('degree')) return GraduationCap;
+    if (slug.includes('membership')) return Users;
+    return Globe;
+  };
 
   return (
     <div className={`lg:col-span-7 opacity-0 ${isVisible ? 'animate-hero-fade-up [animation-delay:500ms]' : ''} bg-white dark:bg-[#111] border border-slate-200 dark:border-white/5 rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group/form`}>
       <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-[#002147] to-transparent opacity-30" />
-      
+
       <form
         onSubmit={(e) => { e.preventDefault(); alert("Application Received!"); }}
         className="space-y-6 md:space-y-8"
@@ -47,45 +102,55 @@ const RegistrationForm = ({ isVisible }) => {
             <label className="text-sm font-bold text-[#002147] dark:text-blue-400 border-b-2 border-[#002147]/20 dark:border-blue-400/20 pb-1 w-fit uppercase tracking-wider">
               Step 01. Select Pathway
             </label>
-            <span className="text-xs font-bold text-slate-400 italic text-right">Target: {activeTypeData.title}</span>
+            <span className="text-xs font-bold text-slate-400 italic text-right">Target: {activeTypeData.name}</span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            {REGISTRATION_TYPES.map((type) => (
-              <button
-                key={type.id}
-                type="button"
-                onClick={() => handleTypeChange(type.id)}
-                className={cn(
-                  "group/btn relative p-4 rounded-xl border transition-all duration-300 text-left",
-                  activeForm === type.id
-                    ? "bg-[#002147] border-[#002147] shadow-lg shadow-[#002147]/20"
-                    : "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-[#002147]/30"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-300",
-                    activeForm === type.id ? "bg-white text-[#002147]" : "bg-white dark:bg-white/10 text-slate-400"
-                  )}>
-                    <type.icon size={18} />
-                  </div>
-                  <div className="overflow-hidden">
-                    <h4 className={cn(
-                      "text-sm font-semibold leading-tight truncate",
-                      activeForm === type.id ? "text-white" : "text-slate-900 dark:text-white"
-                    )}>
-                      {type.title}
-                    </h4>
-                    <span className={cn(
-                      "text-xs font-medium truncate block mt-1",
-                      activeForm === type.id ? "text-white/50" : "text-slate-400"
-                    )}>
-                      {type.tags[0]}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            ))}
+          <div className="grid grid-cols-2 gap-3 min-h-[120px]">
+            {isLoadingPathways ? (
+              <div className="col-span-2 flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-white/5 rounded-xl border border-dashed border-slate-200 dark:border-white/10">
+                <div className="w-8 h-8 border-2 border-[#002147] border-t-transparent rounded-full animate-spin mb-3" />
+                <p className="text-xs text-slate-500 font-medium">Fetching pathways...</p>
+              </div>
+            ) : (
+              pathways.map((pathway) => {
+                const PathwayIcon = getPathwayIcon(pathway.slug);
+                return (
+                  <button
+                    key={pathway.id}
+                    type="button"
+                    onClick={() => handlePathwayChange(pathway)}
+                    className={cn(
+                      "group/btn relative p-4 rounded-xl border transition-all duration-300 text-left",
+                      activeForm === pathway.id
+                        ? "bg-[#002147] border-[#002147] shadow-lg shadow-[#002147]/20"
+                        : "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-[#002147]/30"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-300",
+                        activeForm === pathway.id ? "bg-white text-[#002147]" : "bg-white dark:bg-white/10 text-slate-400"
+                      )}>
+                        <PathwayIcon size={18} />
+                      </div>
+                      <div className="overflow-hidden">
+                        <h4 className={cn(
+                          "text-sm font-semibold leading-tight truncate",
+                          activeForm === pathway.id ? "text-white" : "text-slate-900 dark:text-white"
+                        )}>
+                          {pathway.name}
+                        </h4>
+                        <span className={cn(
+                          "text-xs font-medium truncate block mt-1",
+                          activeForm === pathway.id ? "text-white/50" : "text-slate-400"
+                        )}>
+                          {pathway.description ? (pathway.description.length > 20 ? pathway.description.substring(0, 20) + "..." : pathway.description) : "Learn more"}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
 
@@ -177,16 +242,23 @@ const RegistrationForm = ({ isVisible }) => {
 
           <div className="grid md:grid-cols-2 gap-6">
             <CustomSelect
-              label={`${activeTypeData.title} Program`}
+              label={`${activeTypeData.name} Program`}
               icon={GraduationCap}
               value={formData.program}
-              onChange={(val) => setFormData((prev) => ({ ...prev, program: val }))}
-              options={COURSES[activeForm]}
-              placeholder="Select Program"
+              onChange={(val) => {
+                const selectedProg = programs.find(p => p.name === val);
+                setFormData((prev) => ({
+                  ...prev,
+                  program: val,
+                  programId: selectedProg?.id || ""
+                }));
+              }}
+              options={isLoadingPrograms ? ["Loading Programs..."] : programs.map(p => p.name)}
+              placeholder={isLoadingPrograms ? "Loading..." : "Select Program"}
               required
             />
             <InputField
-              label={activeForm === "al" ? "School Name" : "Current Occupation"}
+              label={activeTypeData.slug === "al" ? "School Name" : "Current Occupation"}
               name="school"
               placeholder="Enter details"
               icon={GraduationCap}
