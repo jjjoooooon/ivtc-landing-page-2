@@ -151,33 +151,7 @@ export default async function CourseDetailsPage({ params }) {
             </ScrollReveal>
 
             <ScrollReveal>
-              {/* Feature Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                {[
-                  { title: "Instructor-Led", desc: "Live expert support", icon: Users },
-                  { title: "Practical Labs", desc: "Hands-on projects", icon: Globe },
-                  { title: "Certification", desc: "Industry recognized", icon: Award },
-                ].map((f, i) => (
-                  <div
-                    key={i}
-                    className="p-5 md:p-6 bg-white dark:bg-[#111] rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-slate-200 dark:border-white/5 transition-all hover:border-blue-500/20 hover:shadow-xl group"
-                  >
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-blue-600 mb-4 md:mb-6 group-hover:scale-110 transition-transform">
-                      <f.icon size={20} className="md:w-6 md:h-6" />
-                    </div>
-                    <h4 className="font-bold text-slate-900 dark:text-white mb-1 md:mb-2 text-sm md:text-base">
-                      {f.title}
-                    </h4>
-                    <p className="text-[11px] md:text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400">
-                      {f.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
-
-            {/* Tags area */}
-            <ScrollReveal>
+              {/* Tags area (Moved here) */}
               <div className="pt-6 md:pt-10">
                 <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-4">
                   Skills & Topics Covered
