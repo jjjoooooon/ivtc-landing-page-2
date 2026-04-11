@@ -175,7 +175,7 @@ export default async function CourseDetailsPage({ params }) {
                 </h3>
                 <div className="flex flex-wrap gap-2 md:gap-3">
                   {course.tags?.map((tag, idx) => (
-                    <span key={idx} className="px-3 md:px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs md:text-sm font-bold tracking-wide hover:border-blue-500/30 hover:bg-white dark:hover:bg-[#111] transition-all cursor-default">
+                    <span key={idx} className="px-3 md:px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs md:text-sm font-medium tracking-wide hover:border-blue-500/30 hover:bg-white dark:hover:bg-[#111] transition-all cursor-default">
                       {tag}
                     </span>
                   ))}
