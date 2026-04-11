@@ -47,6 +47,7 @@ const CoursesPage = async ({ searchParams }) => {
   // Transform API data to Component Format
   let displayCourses = fetchedCourses.map((course) => ({
     id: course?.id,
+    slug: course?.slug,
     title: course?.name,
     categoryName: course?.category?.name,
     categoryId: course?.category?.slug,

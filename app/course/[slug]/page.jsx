@@ -18,14 +18,29 @@ import ScrollReveal from "@/components/Animations/ScrollReveal";
 import CourseMediaGallery from "@/components/Courses/CourseMediaGallery";
 import DOMPurify from "isomorphic-dompurify";
 
-// API Data Fetching
-async function getCourse(id) {
+// API Data Fetching - Robust Implementation
+async function getCourse(identifier) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/courses/${id}`, {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) {
+      console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+      return null;
+    }
+
+    // Safely construct URL to handle trailing slashes
+    const endpoint = `${baseUrl.replace(/\/+$/, '')}/public/courses/${identifier}`;
+    
+    const res = await fetch(endpoint, {
       next: { revalidate: 3600 },
     });
+
+    if (!res.ok) {
+      console.error(`API returned ${res.status} for ${endpoint}`);
+      return null;
+    }
+
     const result = await res.json();
-    return result?.data || null;
+    return result?.status === "success" ? result.data : null;
   } catch (error) {
     console.error("Error fetching course details:", error);
     return null;
@@ -34,24 +49,30 @@ async function getCourse(id) {
 
 // Next.js 15 requires awaiting params
 export default async function CourseDetailsPage({ params }) {
-  const { id } = await params;
-  const data = await getCourse(id);
+  const { slug } = await params;
+  
+  // Guard against empty slugs
+  if (!slug) {
+    notFound();
+  }
+
+  const data = await getCourse(slug);
 
   if (!data) {
     notFound();
   }
 
-  // Transform API data to UI format
+  // Transform API data to UI format with safe fallbacks
   const course = {
     id: data.id,
-    title: data.name,
-    categoryName: data.category?.name,
-    categoryId: data.category?.slug,
-    desc: data.short_description,
-    fullDesc: data.full_description,
+    title: data.name || "Untitled Course",
+    categoryName: data.category?.name || "Uncategorized",
+    categoryId: data.category?.slug || "all",
+    desc: data.short_description || "",
+    fullDesc: data.full_description || data.short_description || "",
     fees: data.fees_structure ? parseInt(data.fees_structure).toLocaleString() : null,
-    duration: `${data.duration} ${data.duration_unit}${data.duration !== 1 ? 's' : ''}`,
-    enrolled: 0,
+    duration: data.duration ? `${data.duration} ${data.duration_unit || 'month'}${data.duration !== 1 ? 's' : ''}` : "TBA",
+    enrolled: data.enrolled_count || 0,
     tags: data.tags?.map(t => t.name) || [],
     media: [
       ...(data.primary_image ? [{ 
@@ -107,7 +128,7 @@ export default async function CourseDetailsPage({ params }) {
                 {course.desc}
               </p>
 
-              {/* Course Meta Info - Cleaned up alignment */}
+              {/* Course Meta Info */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-10 border-t border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
                   <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-blue-600 shrink-0">
@@ -144,7 +165,7 @@ export default async function CourseDetailsPage({ params }) {
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">About this course</h3>
                 <div 
                   className="text-slate-600 dark:text-slate-400 leading-relaxed text-[15px]"
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(course.fullDesc || course.desc) }}
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(course.fullDesc || "")) }}
                 />
               </div>
             </ScrollReveal>
@@ -176,7 +197,7 @@ export default async function CourseDetailsPage({ params }) {
                      <p className="text-sm font-medium text-slate-500">Secure your spot in this professional program.</p>
                    </div>
 
-                   {/* Price Display - Simplified and integrated */}
+                   {/* Price Display */}
                    {course.fees && (
                      <div className="pt-6 border-t border-slate-100 dark:border-white/5">
                         <div className="text-xs font-semibold text-slate-500 mb-1">Total Course Fee</div>
@@ -211,8 +232,8 @@ export default async function CourseDetailsPage({ params }) {
 
 // Dynamic Metadata
 export async function generateMetadata({ params }) {
-  const { id } = await params;
-  const course = await getCourse(id);
+  const { slug } = await params;
+  const course = await getCourse(slug);
 
   if (!course) {
     return { title: 'Course Not Found | IVTC Campus' };
