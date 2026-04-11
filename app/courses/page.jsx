@@ -55,7 +55,7 @@ const CoursesPage = async ({ searchParams }) => {
     tags: course?.tags?.map((t) => t.name) || [],
     desc: course?.short_description,
     image: course?.primary_image 
-      ? `https://api.ivtccampus.lk/storage/${course.primary_image.replace(/^\/+/, '')}` 
+      ? `https://api.ivtccampus.lk/${course.primary_image.replace(/\/+/g, '/')}` 
       : null,
     icon: CATEGORY_META[course?.category?.slug]?.icon || <Globe size={28} />,
   }));

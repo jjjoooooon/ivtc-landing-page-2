@@ -1,17 +1,26 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Clock, Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
 const CourseCard = ({ course }) => {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <ScrollReveal animationClass="animate-fade-in" options={{ threshold: 0.1 }}>
       <div className="group relative bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8 flex flex-col h-full transition-all duration-500 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10">
         {/* Header: Icon & Category */}
         <div className="flex justify-between items-start mb-8 relative z-10">
           <div className="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 flex items-center justify-center text-blue-500 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 overflow-hidden">
-            {course?.image ? (
-              <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+            {course?.image && !imgError ? (
+              <img 
+                src={course.image} 
+                alt={course?.title} 
+                className="w-full h-full object-cover" 
+                onError={() => setImgError(true)}
+              />
             ) : (
               course?.icon
             )}
