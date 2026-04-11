@@ -63,7 +63,7 @@ const CourseCard = ({ course }) => {
             {course?.tags?.slice(0, 3).map((tag, idx) => (
               <span 
                 key={idx} 
-                className="px-2 py-1 bg-slate-100 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 rounded-md text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-tight"
+                className="px-2 py-1 bg-slate-100 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 rounded-md text-[9px] font-medium text-slate-600 dark:text-slate-400 uppercase tracking-tight"
               >
                 {tag}
               </span>
