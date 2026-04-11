@@ -11,6 +11,7 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Academics", href: "#", hasMega: true },
   { name: "Certification", href: "/verify" },
+  { name: "Registration", href: "#registration" },
   { name: "Meerza Foundation", href: "/meerza-foundation", hasMega: true },
   { name: "Contact", href: "/contact" },
 ];
@@ -89,26 +90,23 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-10002 p-3 md:p-6 flex justify-center transition-transform duration-500 will-change-transform ${
-          isScrolled && !isMenuOpen
-            ? "-translate-y-2 md:translate-y-0"
-            : "translate-y-0"
-        }`}
+        className={`fixed top-0 left-0 w-full z-10002 p-3 md:p-6 flex justify-center transition-transform duration-500 will-change-transform ${isScrolled && !isMenuOpen
+          ? "-translate-y-2 md:translate-y-0"
+          : "translate-y-0"
+          }`}
       >
         <nav
-          className={`w-full max-w-[1400px] rounded-[1.5rem] lg:rounded-full px-5 md:px-8 py-2 md:py-4 flex justify-between items-center relative transition-colors duration-500 border ${
-            isScrolled || pathname !== "/"
-              ? "bg-white dark:bg-[#0a0a0a] md:bg-white/95 md:dark:bg-black/95 shadow-md md:shadow-lg md:backdrop-blur-sm border-slate-200 dark:border-white/10"
-              : "bg-transparent border-transparent"
-          }`}
+          className={`w-full max-w-[1400px] rounded-[1.5rem] lg:rounded-full px-5 md:px-8 py-2 md:py-4 flex justify-between items-center relative transition-colors duration-500 border ${isScrolled || pathname !== "/"
+            ? "bg-white dark:bg-[#0a0a0a] md:bg-white/95 md:dark:bg-black/95 shadow-md md:shadow-lg md:backdrop-blur-sm border-slate-200 dark:border-white/10"
+            : "bg-transparent border-transparent"
+            }`}
         >
           <Link href="/" className="flex items-center gap-3 z-[110]" onClick={closeMenu}>
             <div
-              className={`relative flex items-center justify-center transition-all duration-500 ease-in-out rounded-full bg-white shadow-xl ${
-                isScrolled && !isMenuOpen
-                  ? "w-10 h-10 md:w-14 md:h-14"
-                  : "w-14 h-14 md:w-20 md:h-20"
-              }`}
+              className={`relative flex items-center justify-center transition-all duration-500 ease-in-out rounded-full bg-white shadow-xl ${isScrolled && !isMenuOpen
+                ? "w-10 h-10 md:w-14 md:h-14"
+                : "w-14 h-14 md:w-20 md:h-20"
+                }`}
             >
               <Image
                 src="/ivtc_campus_logo.png"
@@ -130,26 +128,22 @@ const Navbar = () => {
               >
                 <Link
                   href={link.href}
-                  className={`group relative text-[14px] font-medium transition-colors flex items-center gap-1.5 py-1 ${
-                    pathname === link.href ? "font-bold text-slate-900 dark:text-white" : ""
-                  } ${
-                    isScrolled || pathname !== "/"
+                  className={`group relative text-[14px] font-medium transition-colors flex items-center gap-1.5 py-1 ${pathname === link.href ? "font-bold text-slate-900 dark:text-white" : ""
+                    } ${isScrolled || pathname !== "/"
                       ? "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                       : "text-white/90 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {link.name}
                   <span
-                    className={`absolute bottom-0 left-0 h-[2px] transition-all duration-300 ease-out ${
-                      pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
-                    } ${isScrolled || pathname !== "/" ? "bg-[#002147] dark:bg-white" : "bg-white"}`}
+                    className={`absolute bottom-0 left-0 h-[2px] transition-all duration-300 ease-out ${pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                      } ${isScrolled || pathname !== "/" ? "bg-[#002147] dark:bg-white" : "bg-white"}`}
                   />
                   {link.hasMega && (
                     <ChevronDown
                       size={14}
-                      className={`transition-transform duration-300 ${
-                        activeMenu === link.name ? "rotate-180" : ""
-                      }`}
+                      className={`transition-transform duration-300 ${activeMenu === link.name ? "rotate-180" : ""
+                        }`}
                     />
                   )}
                 </Link>
@@ -178,7 +172,7 @@ const Navbar = () => {
                           </Link>
                         ))}
                       </div>
-                      
+
                       {link.name !== "Meerza Foundation" && (
                         <div className="mt-8 pt-6 border-t border-slate-100 dark:border-white/5 flex justify-between items-center">
                           <div>
@@ -218,11 +212,10 @@ const Navbar = () => {
 
             <button
               onClick={toggleMenu}
-              className={`lg:hidden flex items-center justify-center w-10 h-10 rounded-full relative transition-colors ${
-                isMenuOpen ? "bg-white text-black" : (isScrolled || pathname !== "/"
-                  ? "bg-slate-100 dark:bg-[#002147]/20 text-slate-900 dark:text-blue-400"
-                  : "bg-[#002147]/20 text-blue-400 backdrop-blur-sm")
-              }`}
+              className={`lg:hidden flex items-center justify-center w-10 h-10 rounded-full relative transition-colors ${isMenuOpen ? "bg-white text-black" : (isScrolled || pathname !== "/"
+                ? "bg-slate-100 dark:bg-[#002147]/20 text-slate-900 dark:text-blue-400"
+                : "bg-[#002147]/20 text-blue-400 backdrop-blur-sm")
+                }`}
               aria-label="Toggle Menu"
             >
               {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -233,9 +226,8 @@ const Navbar = () => {
 
       {/* MOBILE OVERLAY */}
       <div
-        className={`fixed inset-0 z-10001 bg-white dark:bg-[#080808] transition-all duration-300 ease-in-out lg:hidden flex flex-col ${
-          isMenuOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-5"
-        }`}
+        className={`fixed inset-0 z-10001 bg-white dark:bg-[#080808] transition-all duration-300 ease-in-out lg:hidden flex flex-col ${isMenuOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-5"
+          }`}
       >
         <div className="flex-1 overflow-y-auto pt-32 pb-10 px-8">
           <div className="flex flex-col gap-4">
@@ -244,25 +236,22 @@ const Navbar = () => {
                 {link.hasMega ? (
                   <button
                     onClick={() => toggleMobileSubMenu(link.name)}
-                    className={`w-full py-5 text-xl font-bold flex items-center justify-between text-left transition-colors group ${
-                      mobileSubMenu === link.name ? "text-[#002147] dark:text-blue-400" : "text-slate-900 dark:text-white hover:text-[#002147] dark:hover:text-blue-400"
-                    }`}
+                    className={`w-full py-5 text-xl font-bold flex items-center justify-between text-left transition-colors group ${mobileSubMenu === link.name ? "text-[#002147] dark:text-blue-400" : "text-slate-900 dark:text-white hover:text-[#002147] dark:hover:text-blue-400"
+                      }`}
                   >
                     {link.name}
                     <ChevronDown
                       size={20}
-                      className={`transition-all duration-300 ${
-                        mobileSubMenu === link.name ? "rotate-180 text-[#002147] dark:text-blue-400 scale-110" : "text-slate-400 dark:text-slate-600 group-hover:text-[#002147] dark:group-hover:text-blue-400 group-hover:scale-110"
-                      }`}
+                      className={`transition-all duration-300 ${mobileSubMenu === link.name ? "rotate-180 text-[#002147] dark:text-blue-400 scale-110" : "text-slate-400 dark:text-slate-600 group-hover:text-[#002147] dark:group-hover:text-blue-400 group-hover:scale-110"
+                        }`}
                     />
                   </button>
                 ) : (
                   <Link
                     href={link.href}
                     onClick={closeMenu}
-                    className={`block py-5 text-xl font-bold transition-colors group ${
-                      pathname === link.href ? "text-[#002147] dark:text-blue-400" : "text-slate-900 dark:text-white hover:text-[#002147] dark:hover:text-blue-400"
-                    }`}
+                    className={`block py-5 text-xl font-bold transition-colors group ${pathname === link.href ? "text-[#002147] dark:text-blue-400" : "text-slate-900 dark:text-white hover:text-[#002147] dark:hover:text-blue-400"
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       {link.name}
@@ -270,7 +259,7 @@ const Navbar = () => {
                     </div>
                   </Link>
                 )}
-                
+
                 {link.hasMega && mobileSubMenu === link.name && (
                   <div className="pb-6 flex flex-col gap-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
                     {menuData[link.name]?.map((item, i) => (
