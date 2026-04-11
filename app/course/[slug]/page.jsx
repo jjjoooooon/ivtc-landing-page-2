@@ -186,37 +186,37 @@ export default async function CourseDetailsPage({ params }) {
             </ScrollReveal>
           </div>
 
-          <aside className="lg:col-span-4 sticky top-40 w-full z-10">
+          <aside className="lg:col-span-4 lg:sticky lg:top-44 w-full z-10">
             <ScrollReveal>
-              <div className="bg-white dark:bg-[#111] rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
-                <div className="p-8 space-y-8">
+              <div className="bg-white dark:bg-[#111] rounded-[2rem] sm:rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
+                <div className="p-6 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
                    <div>
-                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                     <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
                         Get started today
                      </h3>
-                     <p className="text-sm font-medium text-slate-500">Secure your spot in this professional program.</p>
+                     <p className="text-xs sm:text-sm font-medium text-slate-500 max-w-[240px]">Secure your spot in this professional program.</p>
                    </div>
 
-                   {/* Price Display */}
+                   {/* Price Display - Simplified and integrated */}
                    {course.fees && (
                      <div className="pt-6 border-t border-slate-100 dark:border-white/5">
-                        <div className="text-xs font-semibold text-slate-500 mb-1">Total Course Fee</div>
-                        <div className="text-3xl font-bold text-slate-900 dark:text-white">Rs. {course.fees}</div>
+                        <div className="text-[10px] sm:text-xs font-semibold text-slate-500 mb-1 uppercase tracking-tight">Total Course Fee</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Rs. {course.fees}</div>
                      </div>
                    )}
 
                    <div className="space-y-4">
-                     <Button className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 group">
+                     <Button className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-base shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 group transition-all">
                         Complete Registration
-                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform sm:w-5" />
                      </Button>
                      
                      <div className="space-y-3 pt-6">
-                        <div className="flex items-center gap-2.5 text-xs font-medium text-slate-600 dark:text-slate-400">
-                           <CheckCircle2 size={16} className="text-green-500" /> Professional certification included
+                        <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
+                           <CheckCircle2 size={14} className="text-green-500 sm:w-4" /> Professional certification included
                         </div>
-                        <div className="flex items-center gap-2.5 text-xs font-medium text-slate-600 dark:text-slate-400">
-                           <HelpCircle size={16} className="text-blue-500" /> 24/7 technical and expert support
+                        <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
+                           <HelpCircle size={14} className="text-blue-500 sm:w-4" /> 24/7 technical and expert support
                         </div>
                      </div>
                    </div>
