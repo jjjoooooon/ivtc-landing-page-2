@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Clock, Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
+import DOMPurify from "isomorphic-dompurify";
 
 const CourseCard = ({ course }) => {
   const [imgError, setImgError] = useState(false);
@@ -54,9 +55,10 @@ const CourseCard = ({ course }) => {
             {course?.title}
           </h4>
           
-          <p className="text-slate-600 dark:text-slate-400 text-[12px] leading-relaxed mb-4 flex-1 font-medium">
-            {course?.desc}
-          </p>
+          <div 
+            className="text-slate-600 dark:text-slate-400 text-[12px] leading-relaxed mb-4 flex-1 font-medium"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(course.desc) }}
+          />
 
           {/* Tags - Improved Readability */}
           <div className="flex flex-wrap gap-1.5 mb-5">

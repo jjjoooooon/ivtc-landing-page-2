@@ -15,6 +15,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 import CourseMediaGallery from "@/components/Courses/CourseMediaGallery";
+import DOMPurify from "isomorphic-dompurify";
 
 // API Data Fetching
 async function getCourse(id) {
@@ -133,9 +134,10 @@ export default async function CourseDetailsPage({ params }) {
             <ScrollReveal>
               <div className="prose dark:prose-invert max-w-none">
                 <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-4">Course Description</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                   {course.fullDesc || course.desc}
-                </p>
+                <div 
+                  className="text-slate-600 dark:text-slate-400 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(course.fullDesc || course.desc) }}
+                />
               </div>
             </ScrollReveal>
 
