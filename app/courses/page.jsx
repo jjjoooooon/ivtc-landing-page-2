@@ -1,14 +1,20 @@
 import React from "react";
-import { COURSES_DATA } from "@/lib/data/courses";
 import CourseFilters from "@/components/Courses/CourseFilters";
 import CourseCard from "@/components/Courses/CourseCard";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, BookOpen, GraduationCap, Zap, Globe } from "lucide-react";
 
 export const metadata = {
   title: "All Courses | IVTC Campus",
   description: "Explore our comprehensive list of IT courses, certifications, and A/L ICT mastery programs designed for absolute success.",
   keywords: ["IVTC Courses", "IT Certifications", "A/L ICT", "Tech Classes Sri Lanka"],
+};
+
+const CATEGORY_META = {
+  "after-al": { icon: <Zap size={28} /> },
+  "al-ict-classes": { icon: <BookOpen size={28} /> },
+  "certifications": { icon: <Globe size={28} /> },
+  "diplomas": { icon: <GraduationCap size={28} /> },
 };
 
 const CoursesPage = async ({ searchParams }) => {
@@ -17,25 +23,54 @@ const CoursesPage = async ({ searchParams }) => {
   const currentCategory = params.category || "all";
   const currentSort = params.sort || "popular";
 
-  // Filter
-  let filteredCourses = COURSES_DATA;
-  if (currentCategory !== "all") {
-    filteredCourses = filteredCourses.filter(c => c.categoryId === currentCategory);
+  let fetchedCourses = [];
+  try {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/courses`;
+    const url = new URL(baseUrl);
+    
+    // Attempt server-side category filtering if supported
+    if (currentCategory !== "all") {
+      url.searchParams.append("category", currentCategory);
+    }
+
+    const res = await fetch(url.toString(), {
+      next: { revalidate: 3600 },
+    });
+    const result = await res.json();
+    
+    // API returns paginated data in result.data.data
+    fetchedCourses = result?.data?.data || [];
+  } catch (error) {
+    console.error("Error fetching courses:", error);
   }
 
-  // Sort
+  // Transform API data to Component Format
+  let displayCourses = fetchedCourses.map((course) => ({
+    id: course?.id,
+    title: course?.name,
+    categoryName: course?.category?.name,
+    categoryId: course?.category?.slug,
+    duration: `${course?.duration} ${course?.duration_unit}${course?.duration !== 1 ? "s" : ""}`,
+    enrolled: course?.enrolled_count || 0, // Fallback placeholder
+    tags: course?.tags?.map((t) => t.name) || [],
+    desc: course?.short_description,
+    image: course?.primary_image 
+      ? `https://api.ivtccampus.lk/storage/${course.primary_image.replace(/^\/+/, '')}` 
+      : null,
+    icon: CATEGORY_META[course?.category?.slug]?.icon || <Globe size={28} />,
+  }));
+
+  // Local Sort Fallback (if API doesn't handle sort)
   if (currentSort === "enrolled-desc") {
-    filteredCourses.sort((a, b) => b.enrolled - a.enrolled);
+    displayCourses.sort((a, b) => b.enrolled - a.enrolled);
   } else if (currentSort === "duration-asc") {
-    // Basic string parse for duration (e.g., "4 Months" -> 4, "1 Year" -> 12)
-    const getMonths = (duration) => {
-      if (duration.includes("Month")) return parseInt(duration);
-      if (duration.includes("Year")) return parseInt(duration) * 12;
-      return 0;
+    const getMonths = (durationStr) => {
+      const num = parseInt(durationStr) || 0;
+      if (durationStr.toLowerCase().includes("year")) return num * 12;
+      return num;
     };
-    filteredCourses.sort((a, b) => getMonths(a.duration) - getMonths(b.duration));
+    displayCourses.sort((a, b) => getMonths(a.duration) - getMonths(b.duration));
   }
-  // Default 'popular' maintains initial array order
 
   return (
     <main className="min-h-screen bg-white dark:bg-[#0a0a0a] transition-colors duration-500 overflow-hidden relative">
@@ -59,9 +94,9 @@ const CoursesPage = async ({ searchParams }) => {
         <CourseFilters />
 
         {/* Dynamic Server-Rendered Grid */}
-        {filteredCourses.length > 0 ? (
+        {displayCourses.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-20">
-            {filteredCourses.map((course) => (
+            {displayCourses.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
           </div>

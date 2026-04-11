@@ -1,17 +1,32 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CATEGORIES } from "@/lib/data/courses";
 import { ChevronDown } from "lucide-react";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
 const CourseFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [categories, setCategories] = useState([{ id: "all", name: "All Categories", slug: "all" }]);
 
   const currentCategory = searchParams.get("category") || "all";
   const currentSort = searchParams.get("sort") || "popular";
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/categories`);
+        const data = await res.json();
+        if (data?.data) {
+          setCategories([{ id: "all", name: "All Categories", slug: "all" }, ...data.data]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleFilterChange = useCallback(
     (key, value) => {
@@ -30,12 +45,12 @@ const CourseFilters = () => {
     <ScrollReveal className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-12 relative z-20">
       {/* Category Tabs */}
       <div className="flex flex-wrap gap-2 w-full sm:w-auto p-1 bg-slate-100 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10">
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <button
-            key={cat.id}
-            onClick={() => handleFilterChange("category", cat.id)}
+            key={cat.id || cat.slug}
+            onClick={() => handleFilterChange("category", cat.slug || cat.id)}
             className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all ${
-              currentCategory === cat.id
+              currentCategory === (cat.slug || cat.id)
                 ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
                 : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
