@@ -108,16 +108,25 @@ export default async function CourseDetailsPage({ params }) {
                 {course.desc}
               </p>
 
-              {/* Course Meta Info */}
-              <div className="flex flex-wrap items-center gap-4 md:gap-6 pt-4 md:pt-6 border-t border-slate-200 dark:border-white/10">
-                {/* Lecturer hidden as per user request */}
-                {/* <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs md:text-sm">
-                  <UserCircle className="text-blue-500 shrink-0" size={18} />
-                  <span>Lecturer: {course.lecturer}</span>
-                </div> */}
-                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs md:text-sm">
-                  <Users className="text-blue-500 shrink-0" size={16} />
-                  <span>{course.enrolled.toLocaleString()}+ Enrolled</span>
+              {/* Course Meta Info - Moved from Sidebar and increased density */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 pt-6 md:pt-8 border-t border-slate-200 dark:border-white/10">
+                <div className="flex items-center gap-3 text-xs md:text-sm font-bold tracking-wide text-slate-700 dark:text-slate-300">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                    <Clock size={18} />
+                  </div>
+                  {course.duration} Duration
+                </div>
+                <div className="flex items-center gap-3 text-xs md:text-sm font-bold tracking-wide text-slate-700 dark:text-slate-300">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                    <ShieldCheck size={18} />
+                  </div>
+                  Lifetime Access
+                </div>
+                <div className="flex items-center gap-3 text-xs md:text-sm font-bold tracking-wide text-slate-700 dark:text-slate-300">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                    <Award size={18} />
+                  </div>
+                  Certificate Included
                 </div>
               </div>
             </div>
@@ -193,7 +202,7 @@ export default async function CourseDetailsPage({ params }) {
                   Ready to start?
                 </h3>
 
-                <div className="space-y-3 mb-6 md:mb-8 relative z-10">
+                <div className="space-y-3 relative z-10">
                   <Button className="w-full h-12 md:h-14 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs md:text-[14px] shadow-lg shadow-blue-500/25 group transition-all">
                     Confirm Enrollment
                     <ArrowRight
@@ -201,27 +210,6 @@ export default async function CourseDetailsPage({ params }) {
                       className="ml-2 w-4 md:w-5 group-hover:translate-x-1 transition-transform"
                     />
                   </Button>
-                </div>
-
-                <div className="space-y-3 md:space-y-4 pt-5 md:pt-6 border-t border-slate-100 dark:border-white/5 relative z-10">
-                  <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-400">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                      <Clock size={16} className="md:w-[18px]" />
-                    </div>
-                    {course.duration} Duration
-                  </div>
-                  <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-400">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                      <ShieldCheck size={16} className="md:w-[18px]" />
-                    </div>
-                    Lifetime Access
-                  </div>
-                  <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-400">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                      <Award size={16} className="md:w-[18px]" />
-                    </div>
-                    Certificate Included
-                  </div>
                 </div>
               </div>
             </ScrollReveal>
