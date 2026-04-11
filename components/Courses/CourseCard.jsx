@@ -54,7 +54,7 @@ const CourseCard = ({ course }) => {
             {course?.title}
           </h4>
           
-          <p className="text-slate-600 dark:text-slate-400 text-[12px] leading-relaxed mb-4 flex-1 line-clamp-2 font-medium">
+          <p className="text-slate-600 dark:text-slate-400 text-[12px] leading-relaxed mb-4 flex-1 font-medium">
             {course?.desc}
           </p>
 
