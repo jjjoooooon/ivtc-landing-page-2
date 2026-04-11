@@ -93,9 +93,9 @@ const CoursesPage = async ({ searchParams }) => {
 
         <CourseFilters />
 
-        {/* Dynamic Server-Rendered Grid */}
+        {/* Dynamic Server-Rendered Grid - Increased Density */}
         {displayCourses.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-20">
             {displayCourses.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
