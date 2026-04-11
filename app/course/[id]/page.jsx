@@ -14,19 +14,60 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
-import { COURSES_DATA } from "@/lib/data/courses";
 import CourseMediaGallery from "@/components/Courses/CourseMediaGallery";
+
+// API Data Fetching
+async function getCourse(id) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/courses/${id}`, {
+      next: { revalidate: 3600 },
+    });
+    const result = await res.json();
+    return result?.data || null;
+  } catch (error) {
+    console.error("Error fetching course details:", error);
+    return null;
+  }
+}
 
 // Next.js 15 requires awaiting params
 export default async function CourseDetailsPage({ params }) {
   const { id } = await params;
-  
-  // Find the course
-  const course = COURSES_DATA.find((c) => c.id.toString() === id);
+  const data = await getCourse(id);
 
-  if (!course) {
+  if (!data) {
     notFound();
   }
+
+  // Transform API data to UI format
+  const course = {
+    id: data.id,
+    title: data.name,
+    categoryName: data.category?.name,
+    categoryId: data.category?.slug,
+    desc: data.short_description,
+    fullDesc: data.full_description,
+    duration: `${data.duration} ${data.duration_unit}${data.duration !== 1 ? 's' : ''}`,
+    enrolled: 0, // Fallback placeholder
+    tags: data.tags?.map(t => t.name) || [],
+    media: [
+      // Primary image first
+      ...(data.primary_image ? [{ 
+        type: 'image', 
+        url: `https://api.ivtccampus.lk/${data.primary_image.replace(/\/+/g, '/')}` 
+      }] : []),
+      // Then gallery images
+      ...(data.images?.map(img => ({ 
+        type: 'image', 
+        url: `https://api.ivtccampus.lk/${img.image_path.replace(/\/+/g, '/')}` 
+      })) || []),
+      // Then videos if any
+      ...(data.videos?.map(vid => ({ 
+        type: 'video', 
+        url: vid.video_url || vid.video_path // Handling potential video path/url
+      })) || [])
+    ]
+  };
 
   return (
     <main className="min-h-screen bg-slate-50/50 dark:bg-[#0a0a0a] lg:pt-46 pt-36 pb-24 transition-colors">
@@ -53,7 +94,6 @@ export default async function CourseDetailsPage({ params }) {
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 gap-8 lg:gap-12 mb-16 lg:mb-20 items-center">
             <div className="lg:col-span-6 space-y-5 lg:space-y-6 w-full">
               <div className="flex flex-wrap items-center gap-3">
-                {/* Category Badge */}
                 <span className="px-3 md:px-4 py-1.5 rounded-lg md:rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] md:text-[11px] font-bold tracking-wide border border-blue-500/20">
                   {course.categoryName}
                 </span>
@@ -69,10 +109,11 @@ export default async function CourseDetailsPage({ params }) {
 
               {/* Course Meta Info */}
               <div className="flex flex-wrap items-center gap-4 md:gap-6 pt-4 md:pt-6 border-t border-slate-200 dark:border-white/10">
-                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs md:text-sm">
+                {/* Lecturer hidden as per user request */}
+                {/* <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs md:text-sm">
                   <UserCircle className="text-blue-500 shrink-0" size={18} />
                   <span>Lecturer: {course.lecturer}</span>
-                </div>
+                </div> */}
                 <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold text-xs md:text-sm">
                   <Users className="text-blue-500 shrink-0" size={16} />
                   <span>{course.enrolled.toLocaleString()}+ Enrolled</span>
@@ -89,6 +130,15 @@ export default async function CourseDetailsPage({ params }) {
         {/* --- 3. MAIN CONTENT & SIDEBAR --- */}
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-24 lg:mb-32">
           <div className="lg:col-span-8 space-y-10 w-full">
+            <ScrollReveal>
+              <div className="prose dark:prose-invert max-w-none">
+                <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-4">Course Description</h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                   {course.fullDesc || course.desc}
+                </p>
+              </div>
+            </ScrollReveal>
+
             <ScrollReveal>
               {/* Feature Highlights */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -115,7 +165,7 @@ export default async function CourseDetailsPage({ params }) {
               </div>
             </ScrollReveal>
 
-            {/* Tags area (Moved here) */}
+            {/* Tags area */}
             <ScrollReveal>
               <div className="pt-6 md:pt-10">
                 <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-4">
@@ -135,7 +185,6 @@ export default async function CourseDetailsPage({ params }) {
           <aside className="lg:col-span-4 sticky top-24 lg:top-28 w-full z-10">
             <ScrollReveal>
               <div className="bg-white dark:bg-[#111] p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-none border border-slate-200 dark:border-white/10 relative overflow-hidden">
-                {/* Background Accent */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-[50px] rounded-full pointer-events-none" />
                 
                 <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-5 md:mb-6 relative z-10">
@@ -181,24 +230,17 @@ export default async function CourseDetailsPage({ params }) {
   );
 }
 
-// Generate Static Params for build optimization
-export async function generateStaticParams() {
-  return COURSES_DATA.map((course) => ({
-    id: course.id.toString(),
-  }));
-}
-
 // Dynamic Metadata
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const course = COURSES_DATA.find((c) => c.id.toString() === id);
+  const course = await getCourse(id);
 
   if (!course) {
     return { title: 'Course Not Found | IVTC Campus' };
   }
 
   return {
-    title: `${course.title} | IVTC Campus`,
-    description: course.desc,
+    title: `${course.name} | IVTC Campus`,
+    description: course.short_description,
   };
 }
