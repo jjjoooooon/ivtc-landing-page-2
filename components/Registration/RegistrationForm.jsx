@@ -15,6 +15,9 @@ const RegistrationForm = ({ isVisible }) => {
   const [isLoadingPathways, setIsLoadingPathways] = useState(true);
   const [isLoadingPrograms, setIsLoadingPrograms] = useState(false);
   const [activeForm, setActiveForm] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+  const [programType, setProgramType] = useState("program");
 
   const [formData, setFormData] = useState({
     fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
@@ -52,6 +55,7 @@ const RegistrationForm = ({ isVisible }) => {
       const result = await response.json();
       if (result.status === "success") {
         setPrograms(result.data.programs);
+        setProgramType(result.data.type || "program");
       }
     } catch (error) {
       console.error("Error fetching programs:", error);
@@ -89,12 +93,63 @@ const RegistrationForm = ({ isVisible }) => {
     return Globe;
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    const payload = {
+      pathway_id: formData.pathwayId,
+      program_type: programType,
+      program_id: formData.programId,
+      full_name: formData.fullName,
+      nic: formData.nic,
+      dob: formData.dob,
+      gender: formData.gender,
+      phone: formData.phone.trim(),
+      email: formData.email,
+      district: formData.district,
+      city: formData.city,
+      school_name: activeTypeData.slug === 'al' ? formData.school : null,
+      occupation: activeTypeData.slug !== 'al' ? formData.school : "Student"
+    };
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/registration/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setSubmitStatus("success");
+        // Optional: Reset form after delay
+        setTimeout(() => {
+          setFormData({
+            fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
+            dob: new Date().toISOString().split('T')[0], gender: "", address: "", city: "", district: "",
+            postalCode: "", program: "", pathwayId: formData.pathwayId, programId: "", school: "",
+            registrationType: formData.registrationType,
+          });
+          setSubmitStatus(null);
+        }, 5000);
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Submission failed:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className={`lg:col-span-7 opacity-0 ${isVisible ? 'animate-hero-fade-up [animation-delay:500ms]' : ''} bg-white dark:bg-[#111] border border-slate-200 dark:border-white/5 rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group/form`}>
       <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-[#002147] to-transparent opacity-30" />
 
       <form
-        onSubmit={(e) => { e.preventDefault(); alert("Application Received!"); }}
+        onSubmit={handleSubmit}
         className="space-y-6 md:space-y-8"
       >
         <div className="space-y-5">
@@ -269,14 +324,32 @@ const RegistrationForm = ({ isVisible }) => {
         </div>
 
         <div className="pt-6">
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-4">
+            {submitStatus === "success" && (
+              <div className="w-full p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm font-medium text-center animate-in fade-in zoom-in duration-300">
+                Registration successful! We will contact you soon.
+              </div>
+            )}
+            {submitStatus === "error" && (
+              <div className="w-full p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm font-medium text-center animate-in fade-in zoom-in duration-300">
+                Something went wrong. Please try again or contact support.
+              </div>
+            )}
+
             <button
               type="submit"
-              className="group relative w-full sm:w-auto min-w-[280px] bg-linear-to-r from-[#002147] to-[#003366] text-white font-medium py-4 px-10 rounded-full hover:shadow-[0_20px_40px_rgba(0,33,71,0.3)] transition-all duration-500 flex items-center justify-center gap-3 text-xs xl:text-sm active:scale-[0.98] overflow-hidden"
+              disabled={isSubmitting || isLoadingPathways || isLoadingPrograms}
+              className={cn(
+                "group relative w-full sm:w-auto min-w-[280px] bg-linear-to-r from-[#002147] to-[#003366] text-white font-medium py-4 px-10 rounded-full hover:shadow-[0_20px_40px_rgba(0,33,71,0.3)] transition-all duration-500 flex items-center justify-center gap-3 text-xs xl:text-sm active:scale-[0.98] overflow-hidden",
+                (isSubmitting || isLoadingPathways || isLoadingPrograms) && "opacity-70 cursor-not-allowed"
+              )}
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="relative z-10 font-medium">Submit Application</span>
-              <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-500" />
+              <span className="relative z-10 font-medium">
+                {isSubmitting ? "Processing Application..." : "Submit Application"}
+              </span>
+              {!isSubmitting && <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-500" />}
+              {isSubmitting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
             </button>
           </div>
         </div>
