@@ -11,7 +11,7 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Academics", href: "#", hasMega: true },
   { name: "Certification", href: "/verify" },
-  { name: "Registration", href: "#registration" },
+  { name: "Registration", href: "/#registration" },
   { name: "Meerza Foundation", href: "/meerza-foundation", hasMega: true },
   { name: "Contact", href: "/contact" },
 ];
