@@ -61,6 +61,13 @@ const CoursesPage = async ({ searchParams }) => {
     icon: CATEGORY_META[course?.category?.slug]?.icon || <Globe size={28} />,
   }));
 
+  // Manual Category Filtering (since API doesn't support server-side filter by slug)
+  if (currentCategory !== "all") {
+    displayCourses = displayCourses.filter(course => 
+      course.categoryId === currentCategory
+    );
+  }
+
   // Local Sort Fallback (if API doesn't handle sort)
   if (currentSort === "enrolled-desc") {
     displayCourses.sort((a, b) => b.enrolled - a.enrolled);
