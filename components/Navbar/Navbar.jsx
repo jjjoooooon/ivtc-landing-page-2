@@ -296,7 +296,7 @@ const Navbar = () => {
             className="h-14 bg-[#002147] dark:bg-blue-600 hover:bg-[#003366] text-white font-bold rounded-2xl shadow-xl flex items-center justify-center text-base transition-all active:scale-[0.98]"
             onClick={closeMenu}
           >
-            Login
+            LMS Login
           </Link>
         </div>
       </div>
