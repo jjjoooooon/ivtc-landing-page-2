@@ -39,7 +39,43 @@ const UPCOMING_COURSES = [
 ];
 
 
-const UpcomingCourses = () => {
+const UpcomingCourses = async () => {
+  let courses = [];
+
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) {
+      console.warn("NEXT_PUBLIC_API_BASE_URL is missing in UpcomingCourses");
+      return null;
+    }
+
+    const res = await fetch(`${baseUrl}/public/courses`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      throw new Error(`API returned ${res.status}`);
+    }
+
+    const result = await res.json();
+    const fetchedCourses = result?.data?.data || [];
+
+    // Map API data to Carousel format
+    courses = fetchedCourses.map(course => ({
+      title: course.name,
+      date: new Date(course.created_at).toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' }),
+      duration: `${course.duration} ${course.duration_unit}${course.duration !== 1 ? 's' : ''}`,
+      desc: course.short_description,
+      image: course.primary_image 
+        ? `https://api.ivtccampus.lk/${course.primary_image.replace(/\/+/g, '/')}` 
+        : "/courses/web-dev.png",
+      category: course.category?.name || "General",
+    }));
+
+  } catch (error) {
+    console.error("Error fetching upcoming courses:", error);
+  }
+
   return (
     <section className="py-24 bg-transparent overflow-hidden">
       <ScrollReveal className="max-w-7xl mx-auto px-6">
@@ -55,7 +91,13 @@ const UpcomingCourses = () => {
           </p>
         </header>
 
-        <CourseCarousel courses={UPCOMING_COURSES} />
+        {courses.length > 0 ? (
+          <CourseCarousel courses={courses} />
+        ) : (
+          <div className="py-20 text-center opacity-50 italic">
+            No upcoming intakes scheduled at this moment.
+          </div>
+        )}
       </ScrollReveal>
     </section>
   );

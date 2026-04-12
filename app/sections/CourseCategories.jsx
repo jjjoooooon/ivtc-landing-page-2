@@ -30,9 +30,20 @@ const CoursePathways = async () => {
   let categories = [];
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/categories`, {
-      next: { revalidate: 3600 },
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) {
+      console.warn("NEXT_PUBLIC_API_BASE_URL is missing in CourseCategories");
+      return null; // Handle missing URL during static build
+    }
+
+    const res = await fetch(`${baseUrl}/public/categories`, {
+      next: { revalidate: 60 },
     });
+
+    if (!res.ok) {
+      throw new Error(`API returned ${res.status}`);
+    }
+
     const data = await res.json();
     categories = data?.data || [];
   } catch (error) {

@@ -29,7 +29,17 @@ const RegistrationForm = ({ isVisible }) => {
   useEffect(() => {
     const fetchPathways = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/pathways`);
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        if (!baseUrl) {
+          throw new Error("API Base URL not configured");
+        }
+
+        const response = await fetch(`${baseUrl}/public/pathways`);
+        
+        if (!response.ok) {
+           throw new Error(`Server returned ${response.status}`);
+        }
+
         const result = await response.json();
         if (result.status === "success") {
           setPathways(result.data);
@@ -40,6 +50,7 @@ const RegistrationForm = ({ isVisible }) => {
         }
       } catch (error) {
         console.error("Error fetching pathways:", error);
+        // We can keep pathways as [] which will show the "No pathways" or custom error UI
       } finally {
         setIsLoadingPathways(false);
       }
