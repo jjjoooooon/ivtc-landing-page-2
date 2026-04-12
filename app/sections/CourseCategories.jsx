@@ -52,7 +52,7 @@ const CoursePathways = async () => {
 
   const pathways = categories?.map((cat) => ({
     title: cat?.name,
-    // Using optional chaining for description and a temporary fallback
+    slug: cat?.slug,
     desc: cat?.description || CATEGORY_META[cat?.slug]?.desc || "Explore our high-quality educational pathways tailored for your career growth.",
     icon: CATEGORY_META[cat?.slug]?.icon || <Globe size={28} />,
     color: CATEGORY_META[cat?.slug]?.color || "bg-[#002147]",

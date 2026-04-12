@@ -2,13 +2,15 @@
 
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const CourseGrid = ({ pathways }) => {
   return (
     <div className="pathway-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
       {pathways.map((item, i) => (
-        <div
+        <Link
           key={i}
+          href={`/courses?category=${item.slug || 'all'}`}
           className="pathway-card group relative h-[400px] bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 rounded-3xl p-8 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 hover:border-[#002147]/30 dark:hover:border-blue-400/30 hover:shadow-lg hover:shadow-slate-200/50 dark:hover:shadow-none"
         >
           <div className="relative z-10">
@@ -24,12 +26,12 @@ const CourseGrid = ({ pathways }) => {
           </div>
 
           <div className="relative z-10 flex items-center justify-between">
-            <span className="text-slate-900 dark:text-white text-xs font-bold flex items-center gap-2 group-hover:gap-3 transition-all duration-300">
-              EXPLORE PATH{" "}
+            <span className="text-slate-900 dark:text-white text-xs font-bold flex items-center gap-2 group-hover:gap-3 transition-all duration-300 uppercase">
+              See All Courses{" "}
               <ArrowRight size={14} className="text-[#002147] dark:text-blue-400" />
             </span>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
