@@ -14,7 +14,20 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // 2. Check if the path contains any uppercase characters
+  // 2. Check for standalone category pages like /courses/certifications
+  // and redirect them to /courses?category=certifications
+  if (pathname.startsWith('/courses/')) {
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length === 2) {
+      const category = segments[1];
+      const url = request.nextUrl.clone();
+      url.pathname = '/courses';
+      url.searchParams.set('category', category);
+      return NextResponse.redirect(url, 301);
+    }
+  }
+
+  // 3. Check if the path contains any uppercase characters
   if (pathname !== pathname.toLowerCase()) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.toLowerCase();

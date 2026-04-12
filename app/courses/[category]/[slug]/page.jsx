@@ -104,7 +104,7 @@ export default async function CourseDetailsPage({ params }) {
               Courses
             </Link>
             <ChevronRight size={12} className="shrink-0" />
-            <Link href={`/courses/${category}`} className="hover:text-blue-600 transition-colors shrink-0">
+            <Link href={`/courses?category=${category}`} className="hover:text-blue-600 transition-colors shrink-0">
               {course.categoryName}
             </Link>
             <ChevronRight size={12} className="shrink-0" />
