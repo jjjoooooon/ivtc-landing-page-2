@@ -4,12 +4,25 @@ import ShineBadge from "@/components/ui/ShineBadge";
 import RegistrationForm from "../../components/Registration/RegistrationForm";
 import ScrollReveal from "../../components/Animations/ScrollReveal";
 
-const StudentRegistration = () => {
+const StudentRegistration = async () => {
   // Since we want this to be a Server Component, we can't use useScrollReveal here directly for the whole section
-  // But we can pass isVisible=true or handle it within the client components if needed
-  // For now, let's keep the layout static and the form/animations client-side
-  const isVisible = true; // Default to true or handle with a smaller client wrapper if needed
+  const isVisible = true; 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  let pathways = [];
+  try {
+    if (apiUrl) {
+      const res = await fetch(`${apiUrl}/public/pathways`, {
+        next: { revalidate: 60 }
+      });
+      if (res.ok) {
+        const result = await res.json();
+        pathways = result?.data || [];
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching pathways on server:", error);
+  }
 
   return (
     <section
@@ -69,7 +82,7 @@ const StudentRegistration = () => {
           </div>
 
           {/* RIGHT COLUMN: The Application Form */}
-          <RegistrationForm isVisible={isVisible} apiUrl={apiUrl} />
+          <RegistrationForm isVisible={isVisible} apiUrl={apiUrl} initialPathways={pathways} />
         </div>
       </ScrollReveal>
     </section>

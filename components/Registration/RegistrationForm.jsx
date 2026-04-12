@@ -9,12 +9,12 @@ import PhoneInput from "./PhoneInput";
 import { SRI_LANKA_DISTRICTS } from "./RegistrationData";
 import { COUNTRIES } from "./CountriesData";
 
-const RegistrationForm = ({ isVisible, apiUrl: propApiUrl }) => {
+const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] }) => {
   // Use the API URL passed from the server, with a fallback to the env variable
   const apiUrl = propApiUrl || process.env.NEXT_PUBLIC_API_BASE_URL;
-  const [pathways, setPathways] = useState([]);
+  const [pathways, setPathways] = useState(initialPathways);
   const [programs, setPrograms] = useState([]);
-  const [isLoadingPathways, setIsLoadingPathways] = useState(true);
+  const [isLoadingPathways, setIsLoadingPathways] = useState(false);
   const [isLoadingPrograms, setIsLoadingPrograms] = useState(false);
   const [activeForm, setActiveForm] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,37 +28,12 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl }) => {
     registrationType: "",
   });
 
+  // Effect for initial pathway selection if provided via props
   useEffect(() => {
-    const fetchPathways = async () => {
-      try {
-        if (!apiUrl) {
-          throw new Error("API Base URL not configured");
-        }
-
-        const response = await fetch(`${apiUrl}/public/pathways`);
-        
-        if (!response.ok) {
-           throw new Error(`Server returned ${response.status}`);
-        }
-
-        const result = await response.json();
-        if (result.status === "success") {
-          setPathways(result.data);
-          // Auto-select first pathway if available
-          if (result.data.length > 0) {
-            handlePathwayChange(result.data[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching pathways:", error);
-        // We can keep pathways as [] which will show the "No pathways" or custom error UI
-      } finally {
-        setIsLoadingPathways(false);
-      }
-    };
-
-    fetchPathways();
-  }, []);
+    if (pathways.length > 0 && !activeForm) {
+      handlePathwayChange(pathways[0]);
+    }
+  }, [pathways]);
 
   const fetchPrograms = async (pathwayId) => {
     setIsLoadingPrograms(true);
