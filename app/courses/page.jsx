@@ -24,24 +24,30 @@ const CoursesPage = async ({ searchParams }) => {
   const currentSort = params.sort || "popular";
 
   let fetchedCourses = [];
+  let categoryMap = {};
+
   try {
     const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/courses`;
-    const url = new URL(baseUrl);
+    const catUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/categories`;
     
-    // Attempt server-side category filtering if supported
-    if (currentCategory !== "all") {
-      url.searchParams.append("category", currentCategory);
-    }
+    // Parallel fetch for better performance
+    const [coursesRes, catsRes] = await Promise.all([
+      fetch(baseUrl, { next: { revalidate: 3600 } }),
+      fetch(catUrl, { next: { revalidate: 3600 } })
+    ]);
 
-    const res = await fetch(url.toString(), {
-      next: { revalidate: 3600 },
-    });
-    const result = await res.json();
+    const coursesData = await coursesRes.json();
+    const catsData = await catsRes.json();
     
-    // API returns paginated data in result.data.data
-    fetchedCourses = result?.data?.data || [];
+    fetchedCourses = coursesData?.data?.data || [];
+    
+    // Create a robust ID -> Slug map from official categories
+    catsData?.data?.forEach(cat => {
+      categoryMap[cat.id] = cat.slug;
+    });
+
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error("Error fetching courses data:", error);
   }
 
   // Transform API data to Component Format
@@ -50,7 +56,7 @@ const CoursesPage = async ({ searchParams }) => {
     slug: course?.slug,
     title: course?.name,
     categoryName: course?.category?.name || "General",
-    categoryId: course?.category?.slug || course?.category?.name?.toLowerCase().replace(/[\s\/]+/g, '-') || "all",
+    categoryId: categoryMap[course?.category?.id] || "all",
     duration: `${course?.duration} ${course?.duration_unit}${course?.duration !== 1 ? "s" : ""}`,
     enrolled: course?.enrolled_count || 0, // Fallback placeholder
     tags: course?.tags?.map((t) => t.name) || [],
