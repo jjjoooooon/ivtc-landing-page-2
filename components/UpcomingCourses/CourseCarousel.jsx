@@ -48,11 +48,11 @@ const CourseCarousel = ({ courses }) => {
                 {/* Content Area */}
                 <div className="p-6 md:p-8 flex flex-col flex-1 text-left">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 tracking-wide">
+                    {/* <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 tracking-wide">
                       <Calendar size={14} className="text-[#002147] dark:text-blue-400 opacity-70" />
                       {course.date}
                     </div>
-                    <div className="w-1 h-1 rounded-full bg-slate-200 dark:bg-white/10" />
+                    <div className="w-1 h-1 rounded-full bg-slate-200 dark:bg-white/10" /> */}
                     <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 tracking-wide">
                       <Clock size={14} className="text-[#002147] dark:text-blue-400 opacity-70" />
                       {course.duration}
@@ -62,7 +62,7 @@ const CourseCarousel = ({ courses }) => {
                   <h4 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-[#002147] dark:group-hover:text-blue-400 transition-colors">
                     {course.title}
                   </h4>
-                  
+
                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1 font-medium">
                     {course.desc}
                   </p>
@@ -79,7 +79,7 @@ const CourseCarousel = ({ courses }) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        
+
         {/* Carousel Navigation */}
         <div className="hidden lg:flex justify-end gap-3 mt-12">
           <CarouselPrevious className="static translate-y-0 h-12 w-12 border-slate-200 dark:border-white/10 dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10" />
