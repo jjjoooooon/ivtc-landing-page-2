@@ -189,8 +189,8 @@ export default async function CourseDetailsPage({ params }) {
           <aside className="lg:col-span-4 lg:sticky lg:top-44 w-full z-10">
             <ScrollReveal>
               <div className="bg-white dark:bg-[#111] rounded-[2rem] sm:rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
-                <div className="p-6 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
-                   <div>
+                <div className="p-6 sm:p-10 lg:p-10 space-y-6 sm:space-y-8">
+                   <div className="hidden sm:block">
                      <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
                         Get started today
                      </h3>
@@ -199,7 +199,7 @@ export default async function CourseDetailsPage({ params }) {
 
                    {/* Price Display - Simplified and integrated */}
                    {course.fees && (
-                     <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+                     <div className="pt-0 sm:pt-6 border-t-0 sm:border-t border-slate-100 dark:border-white/5">
                         <div className="text-[10px] sm:text-xs font-semibold text-slate-500 mb-1 uppercase tracking-tight">Total Course Fee</div>
                         <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Rs. {course.fees}</div>
                      </div>
@@ -211,7 +211,7 @@ export default async function CourseDetailsPage({ params }) {
                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform sm:w-5" />
                      </Button>
                      
-                     <div className="space-y-3 pt-6">
+                     <div className="space-y-3 pt-6 hidden sm:block">
                         <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
                            <CheckCircle2 size={14} className="text-green-500 sm:w-4" /> Professional certification included
                         </div>
@@ -226,6 +226,21 @@ export default async function CourseDetailsPage({ params }) {
           </aside>
         </div>
       </div>
+
+      {/* MOBILE STICKY CTA - Visible only on small screens */}
+      {course.fees && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 p-4 pb-safe-offset shadow-[0_-8px_30px_rgb(0,0,0,0.08)]">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight mb-0.5">Total Fee</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">Rs. {course.fees}</p>
+            </div>
+            <Button className="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+              Register <ArrowRight size={16} />
+            </Button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
