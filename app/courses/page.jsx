@@ -58,6 +58,8 @@ const CoursesPage = async ({ searchParams }) => {
     categoryName: course?.category?.name || "General",
     categoryId: categoryMap[course?.category?.id] || "all",
     duration: `${course?.duration} ${course?.duration_unit}${course?.duration !== 1 ? "s" : ""}`,
+    // Cache numeric duration for sorting (converted to months)
+    durationValue: (course?.duration || 0) * (course?.duration_unit?.toLowerCase().includes('year') ? 12 : 1),
     enrolled: course?.enrolled_count || 0, // Fallback placeholder
     tags: course?.tags?.map((t) => t.name) || [],
     desc: course?.short_description,
@@ -74,16 +76,16 @@ const CoursesPage = async ({ searchParams }) => {
     );
   }
 
-  // Local Sort Fallback (if API doesn't handle sort)
-  if (currentSort === "enrolled-desc") {
-    displayCourses.sort((a, b) => b.enrolled - a.enrolled);
+  // Pro Sort Logic
+  if (currentSort === "duration-desc") {
+    displayCourses.sort((a, b) => b.durationValue - a.durationValue);
   } else if (currentSort === "duration-asc") {
-    const getMonths = (durationStr) => {
-      const num = parseInt(durationStr) || 0;
-      if (durationStr.toLowerCase().includes("year")) return num * 12;
-      return num;
-    };
-    displayCourses.sort((a, b) => getMonths(a.duration) - getMonths(b.duration));
+    displayCourses.sort((a, b) => a.durationValue - b.durationValue);
+  } else if (currentSort === "alphabetical") {
+    displayCourses.sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    // Default: Newest First (popular/newest)
+    displayCourses.sort((a, b) => b.id - a.id);
   }
 
   return (

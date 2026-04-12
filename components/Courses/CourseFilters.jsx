@@ -67,9 +67,10 @@ const CourseFilters = () => {
           onChange={(e) => handleFilterChange("sort", e.target.value)}
           className="w-full appearance-none bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 px-6 py-3.5 rounded-2xl text-sm font-bold tracking-wide text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
         >
-          <option value="popular" className="bg-white dark:bg-[#111]">Sort by: Most Popular</option>
-          <option value="enrolled-desc" className="bg-white dark:bg-[#111]">Sort by: Highest Enrolled</option>
-          <option value="duration-asc" className="bg-white dark:bg-[#111]">Sort by: Shortest Duration</option>
+          <option value="newest" className="bg-white dark:bg-[#111]">Sort by: Newest Releases</option>
+          <option value="duration-desc" className="bg-white dark:bg-[#111]">Duration: Longest First</option>
+          <option value="duration-asc" className="bg-white dark:bg-[#111]">Duration: Shortest First</option>
+          <option value="alphabetical" className="bg-white dark:bg-[#111]">Name: A to Z</option>
         </select>
         <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
       </div>
