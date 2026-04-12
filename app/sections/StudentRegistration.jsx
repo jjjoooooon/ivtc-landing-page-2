@@ -9,6 +9,7 @@ const StudentRegistration = () => {
   // But we can pass isVisible=true or handle it within the client components if needed
   // For now, let's keep the layout static and the form/animations client-side
   const isVisible = true; // Default to true or handle with a smaller client wrapper if needed
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   return (
     <section
@@ -68,7 +69,7 @@ const StudentRegistration = () => {
           </div>
 
           {/* RIGHT COLUMN: The Application Form */}
-          <RegistrationForm isVisible={isVisible} />
+          <RegistrationForm isVisible={isVisible} apiUrl={apiUrl} />
         </div>
       </ScrollReveal>
     </section>

@@ -9,7 +9,9 @@ import PhoneInput from "./PhoneInput";
 import { SRI_LANKA_DISTRICTS } from "./RegistrationData";
 import { COUNTRIES } from "./CountriesData";
 
-const RegistrationForm = ({ isVisible }) => {
+const RegistrationForm = ({ isVisible, apiUrl: propApiUrl }) => {
+  // Use the API URL passed from the server, with a fallback to the env variable
+  const apiUrl = propApiUrl || process.env.NEXT_PUBLIC_API_BASE_URL;
   const [pathways, setPathways] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [isLoadingPathways, setIsLoadingPathways] = useState(true);
@@ -29,12 +31,11 @@ const RegistrationForm = ({ isVisible }) => {
   useEffect(() => {
     const fetchPathways = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        if (!baseUrl) {
+        if (!apiUrl) {
           throw new Error("API Base URL not configured");
         }
 
-        const response = await fetch(`${baseUrl}/public/pathways`);
+        const response = await fetch(`${apiUrl}/public/pathways`);
         
         if (!response.ok) {
            throw new Error(`Server returned ${response.status}`);
@@ -62,7 +63,8 @@ const RegistrationForm = ({ isVisible }) => {
   const fetchPrograms = async (pathwayId) => {
     setIsLoadingPrograms(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/registration/programs/${pathwayId}`);
+      if (!apiUrl) return;
+      const response = await fetch(`${apiUrl}/public/registration/programs/${pathwayId}`);
       const result = await response.json();
       if (result.status === "success") {
         setPrograms(result.data.programs);
@@ -126,7 +128,8 @@ const RegistrationForm = ({ isVisible }) => {
     };
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/registration/submit`, {
+      if (!apiUrl) throw new Error("API URL not configured");
+      const response = await fetch(`${apiUrl}/public/registration/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
