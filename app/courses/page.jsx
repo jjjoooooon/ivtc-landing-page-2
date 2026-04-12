@@ -49,8 +49,8 @@ const CoursesPage = async ({ searchParams }) => {
     id: course?.id,
     slug: course?.slug,
     title: course?.name,
-    categoryName: course?.category?.name,
-    categoryId: course?.category?.slug,
+    categoryName: course?.category?.name || "General",
+    categoryId: course?.category?.slug || course?.category?.name?.toLowerCase().replace(/[\s\/]+/g, '-') || "all",
     duration: `${course?.duration} ${course?.duration_unit}${course?.duration !== 1 ? "s" : ""}`,
     enrolled: course?.enrolled_count || 0, // Fallback placeholder
     tags: course?.tags?.map((t) => t.name) || [],

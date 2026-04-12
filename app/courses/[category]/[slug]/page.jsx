@@ -49,7 +49,7 @@ async function getCourse(identifier) {
 
 // Next.js 15 requires awaiting params
 export default async function CourseDetailsPage({ params }) {
-  const { slug } = await params;
+  const { category, slug } = await params;
   
   // Guard against empty slugs
   if (!slug) {
@@ -104,7 +104,7 @@ export default async function CourseDetailsPage({ params }) {
               Courses
             </Link>
             <ChevronRight size={12} className="shrink-0" />
-            <Link href={`/courses?category=${course.categoryId}`} className="hover:text-blue-600 transition-colors shrink-0">
+            <Link href={`/courses/${category}`} className="hover:text-blue-600 transition-colors shrink-0">
               {course.categoryName}
             </Link>
             <ChevronRight size={12} className="shrink-0" />

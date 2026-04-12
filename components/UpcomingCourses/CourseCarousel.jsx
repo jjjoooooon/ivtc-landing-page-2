@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/image";
+import Link from "next/link";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import {
   Carousel,
@@ -67,13 +67,13 @@ const CourseCarousel = ({ courses }) => {
                     {course.desc}
                   </p>
 
-                  <a
-                    href="/#registration"
+                  <Link
+                    href={`/courses/${course.categorySlug}/${course.slug}`}
                     className="inline-flex items-center justify-center w-full py-3.5 bg-[#002147] hover:bg-blue-900 dark:bg-white dark:text-black dark:hover:bg-slate-200 text-white rounded-[1.25rem] text-sm transition-all group/btn font-bold shadow-md shadow-blue-900/10 hover:shadow-lg focus:scale-95"
                   >
-                    Register Now
+                    View Details
                     <ArrowRight size={16} className="ml-2 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </CarouselItem>

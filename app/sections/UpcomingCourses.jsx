@@ -70,6 +70,8 @@ const UpcomingCourses = async () => {
         ? `https://api.ivtccampus.lk/${course.primary_image.replace(/\/+/g, '/')}` 
         : "/courses/web-dev.png",
       category: course.category?.name || "General",
+      categorySlug: course.category?.slug || course.category?.name?.toLowerCase().replace(/[\s\/]+/g, '-') || "all",
+      slug: course.slug,
     }));
 
   } catch (error) {
