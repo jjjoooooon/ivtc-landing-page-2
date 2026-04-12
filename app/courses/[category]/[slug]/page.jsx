@@ -124,7 +124,7 @@ export default async function CourseDetailsPage({ params }) {
                 {course.title}
               </h1>
               
-              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium break-words">
                 {course.desc}
               </p>
 
@@ -164,7 +164,7 @@ export default async function CourseDetailsPage({ params }) {
               <div className="prose dark:prose-invert max-w-none">
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">About this course</h3>
                 <div 
-                  className="text-slate-600 dark:text-slate-400 leading-relaxed text-[15px]"
+                  className="text-slate-600 dark:text-slate-400 leading-relaxed text-[15px] break-words overflow-hidden"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(course.fullDesc || "")) }}
                 />
               </div>
