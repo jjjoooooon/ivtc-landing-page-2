@@ -10,7 +10,7 @@ const WhatsAppButton = () => {
   return (
     <div className="relative z-9999" style={{ isolation: 'isolate' }}>
       <FloatingWhatsApp
-        phoneNumber="94112345678"
+        phoneNumber="94773536566"
         accountName="IVTC Campus"
         avatar="/ivtc_logo.png" // Using your existing logo
         statusMessage="Typically replies within 1 hour"

@@ -76,7 +76,7 @@ const StudentRegistration = async () => {
               </div>
               <div>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-widest uppercase">Need Assistance?</p>
-                <p className="text-sm text-slate-900 dark:text-white mt-1 font-semibold">Call us at <a href="tel:+94771234567" className="text-[#002147] dark:text-blue-400 hover:underline">+94 77 123 4567</a></p>
+                <p className="text-sm text-slate-900 dark:text-white mt-1 font-semibold">Call us at <a href="tel:+94773536566" className="text-[#002147] dark:text-blue-400 hover:underline">0773536566</a></p>
               </div>
             </div>
           </div>

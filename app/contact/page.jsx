@@ -98,8 +98,8 @@ const ContactPage = () => {
           {/* --- LEFT SIDE: INFO HUB --- */}
           <div className="lg:col-span-5 space-y-4">
             {[
-              { label: "Contact Numbers", val: "+94 11 234 5678", icon: Phone },
-              { label: "Official Email", val: "hello@ivtccampus.lk", icon: Mail },
+              { label: "Contact Numbers", val: "0773536566 / 0703636566", icon: Phone },
+              { label: "Official Email", val: "ivtccampus@gmail.com", icon: Mail },
               { label: "Digital Presence", val: "www.ivtccampus.lk", icon: Globe },
             ].map((info, idx) => (
               <div
@@ -128,10 +128,10 @@ const ContactPage = () => {
               <MapPin className="absolute -right-4 -bottom-4 w-36 h-36 opacity-[0.06] group-hover/hq:scale-110 transition-transform duration-700" />
               <div className="relative z-10 space-y-5">
                 <h4 className="text-sm font-semibold text-blue-200">Main Office</h4>
-                <p className="text-2xl md:text-3xl font-bold leading-tight tracking-tight">
-                  Colombo 07, Level 04,
+                <p className="text-xl md:text-2xl font-bold leading-tight tracking-tight">
+                  11B/1, Galle Road, Mount Lavinia,
                   <br />
-                  IVTC Campus Building.
+                  Dehiwala - Mount Lavinia.
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
