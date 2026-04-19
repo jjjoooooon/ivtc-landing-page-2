@@ -21,10 +21,7 @@ export const metadata = {
   description: "Join IVTC Campus Sri Lanka for A/L ICT, Higher National Diplomas (HND), and Global Degree Pathways. Empower your digital future with expert-led courses in Software Engineering, Data Science, Cyber Security, and more.",
   keywords: ["IVTC Campus", "ICT Education Sri Lanka", "A/L ICT", "Higher National Diploma", "HND Sri Lanka", "Software Engineering Courses", "Data Science Sri Lanka", "Cyber Security Education"],
   icons: {
-    icon: [
-      { url: "/ivtc_favicon_white.png" },
-      { url: "/ivtc_favicon_white.png", sizes: "32x32", type: "image/png" },
-    ],
+    icon: "/ivtc_favicon_white.png",
     shortcut: "/ivtc_favicon_white.png",
     apple: "/ivtc_favicon_white.png",
   },
