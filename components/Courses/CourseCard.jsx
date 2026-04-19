@@ -74,7 +74,7 @@ const CourseCard = ({ course }) => {
 
           {/* Action Button - Standard Size */}
           <Link 
-            href={`/courses/${course?.categoryId}/${course?.slug}`}
+            href={`/courses/${course?.categoryId}/${course?.slug}?id=${course?.id}`}
             className="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white"
           >
             Course Details <ArrowRight size={14} />

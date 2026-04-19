@@ -72,6 +72,7 @@ const UpcomingCourses = async () => {
       category: course.category?.name || "General",
       categorySlug: course.category?.slug || course.category?.name?.toLowerCase().replace(/[\s\/]+/g, '-') || "all",
       slug: course.slug,
+      id: course.id,
     }));
 
   } catch (error) {

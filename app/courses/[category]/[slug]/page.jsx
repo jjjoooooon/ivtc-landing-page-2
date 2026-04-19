@@ -2,10 +2,8 @@ import React from "react";
 import {
   Clock,
   ShieldCheck,
-  Users,
   Award,
   ArrowRight,
-  Globe,
   ChevronRight,
   Home,
   CheckCircle2,
@@ -16,10 +14,10 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 import CourseMediaGallery from "@/components/Courses/CourseMediaGallery";
-import DOMPurify from "isomorphic-dompurify";
+import SanitizedContent from "@/components/Courses/SanitizedContent";
 
-// API Data Fetching - Robust Implementation
-async function getCourse(identifier) {
+// API Data Fetching - Hybrid Slug/ID Implementation
+async function fetchCourse(identifier) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!baseUrl) {
@@ -27,7 +25,6 @@ async function getCourse(identifier) {
       return null;
     }
 
-    // Safely construct URL to handle trailing slashes
     const endpoint = `${baseUrl.replace(/\/+$/, '')}/public/courses/${identifier}`;
     
     const res = await fetch(endpoint, {
@@ -47,23 +44,22 @@ async function getCourse(identifier) {
   }
 }
 
-// Next.js 15 requires awaiting params
-export default async function CourseDetailsPage({ params }) {
-  const { category, slug } = await params;
+export default async function CourseDetailsPage({ params, searchParams }) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const { category, slug } = resolvedParams;
+  const id = resolvedSearchParams.id;
   
-  // Guard against empty slugs
-  if (!slug) {
-    notFound();
-  }
-
-  const data = await getCourse(slug);
+  // Prefer fetching by ID if available (more reliable as requested)
+  // Otherwise fallback to slug (SEO friendly)
+  const data = await fetchCourse(id || slug);
 
   if (!data) {
     notFound();
   }
 
   try {
-    // Transform API data to UI format with safe fallbacks
+    // Transform API data to UI format
     const course = {
       id: data.id,
       title: data.name || "Untitled Course",
@@ -91,7 +87,6 @@ export default async function CourseDetailsPage({ params }) {
       ]
     };
 
-    // Format fees with commas if it exists
     if (course.fees) {
       course.fees = parseInt(course.fees).toLocaleString();
     }
@@ -134,7 +129,6 @@ export default async function CourseDetailsPage({ params }) {
                   {course.desc}
                 </p>
 
-                {/* Course Meta Info */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-10 border-t border-slate-200 dark:border-white/10">
                   <div className="flex items-center gap-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
                     <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-blue-600 shrink-0">
@@ -169,9 +163,9 @@ export default async function CourseDetailsPage({ params }) {
               <ScrollReveal>
                 <div className="prose dark:prose-invert max-w-none">
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">About this course</h3>
-                  <div 
+                  <SanitizedContent 
+                    html={course.fullDesc} 
                     className="text-slate-600 dark:text-slate-400 leading-relaxed text-[15px] break-words overflow-hidden"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(course.fullDesc || "")) }}
                   />
                 </div>
               </ScrollReveal>
@@ -203,7 +197,6 @@ export default async function CourseDetailsPage({ params }) {
                        <p className="text-xs sm:text-sm font-medium text-slate-500 max-w-[240px]">Secure your spot in this professional program.</p>
                      </div>
 
-                     {/* Price Display - Simplified and integrated */}
                      {course.fees && (
                        <div className="pt-0 sm:pt-6 border-t-0 sm:border-t border-slate-100 dark:border-white/5">
                           <div className="text-[10px] sm:text-xs font-semibold text-slate-500 mb-1 uppercase tracking-tight">Total Course Fee</div>
@@ -233,7 +226,6 @@ export default async function CourseDetailsPage({ params }) {
           </div>
         </div>
 
-        {/* MOBILE STICKY CTA - Visible only on small screens */}
         {course.fees && (
           <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 p-4 pb-safe-offset shadow-[0_-8px_30px_rgb(0,0,0,0.08)]">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -250,17 +242,20 @@ export default async function CourseDetailsPage({ params }) {
       </main>
     );
   } catch (error) {
-    console.error(`CRITICAL: Error rendering course details for ${slug}:`, error);
-    // In production, we'd rather show a 404 than a broken 500
+    console.error(`CRITICAL: Error rendering course details:`, error);
     notFound();
   }
 }
 
 // Dynamic Metadata
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   try {
-    const { slug } = await params;
-    const course = await getCourse(slug);
+    const resolvedParams = await params;
+    const resolvedSearchParams = await searchParams;
+    const { slug } = resolvedParams;
+    const id = resolvedSearchParams.id;
+    
+    const course = await fetchCourse(id || slug);
 
     if (!course) {
       return { title: 'Course Not Found | IVTC Campus' };

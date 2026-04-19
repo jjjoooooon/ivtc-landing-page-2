@@ -68,7 +68,7 @@ const CourseCarousel = ({ courses }) => {
                   </p>
 
                   <Link
-                    href={`/courses/${course.categorySlug}/${course.slug}`}
+                    href={`/courses/${course.categorySlug}/${course.slug}?id=${course.id}`}
                     className="inline-flex items-center justify-center w-full py-3.5 bg-[#002147] hover:bg-blue-900 dark:bg-white dark:text-black dark:hover:bg-slate-200 text-white rounded-[1.25rem] text-sm transition-all group/btn font-bold shadow-md shadow-blue-900/10 hover:shadow-lg focus:scale-95"
                   >
                     View Details
