@@ -198,7 +198,10 @@ const Navbar = () => {
           <div className="flex items-center gap-3 z-[110]">
             <Link
               href="/al-ict"
-              className={`hidden lg:flex px-6 py-3 text-sm font-bold rounded-3xl transition-all items-center justify-center border border-[#002147] dark:border-blue-400 text-[#002147] dark:text-blue-400 hover:bg-[#002147] hover:text-white dark:hover:bg-blue-600 dark:hover:text-white`}
+              className={`hidden lg:flex px-6 py-3 text-sm font-bold rounded-3xl transition-all items-center justify-center border dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white ${isScrolled || pathname !== "/"
+                ? "border-[#002147] text-[#002147] hover:bg-[#002147] hover:text-white"
+                : "border-white text-white hover:bg-white hover:text-[#002147]"
+              }`}
             >
               A/L ICT
             </Link>
