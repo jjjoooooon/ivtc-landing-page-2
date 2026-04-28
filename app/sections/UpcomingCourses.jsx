@@ -1,4 +1,6 @@
 import React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import ShineBadge from "@/components/ui/ShineBadge";
 import CourseCarousel from "../../components/UpcomingCourses/CourseCarousel";
 import ScrollReveal from "../../components/Animations/ScrollReveal";
@@ -82,16 +84,25 @@ const UpcomingCourses = async () => {
   return (
     <section className="py-24 bg-transparent overflow-hidden">
       <ScrollReveal className="max-w-7xl mx-auto px-6">
-        <header className="course-header mb-16 text-left">
-          <ShineBadge className="mb-2 md:mb-0">
-            Starting Soon
-          </ShineBadge>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white leading-[1.15] md:leading-[1.1] mb-4 tracking-tight">
-            Upcoming <span className="text-[#002147] dark:text-blue-400">Intakes</span>
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg max-w-2xl leading-relaxed lg:mx-0 mx-auto font-medium">
-            Reserve your spot for our most anticipated technical programs. Limited seats available for the 2026 academic year.
-          </p>
+        <header className="course-header mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <ShineBadge className="mb-2 md:mb-0">
+              Starting Soon
+            </ShineBadge>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white leading-[1.15] md:leading-[1.1] mb-4 tracking-tight">
+              Upcoming <span className="text-[#002147] dark:text-blue-400">Intakes</span>
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg max-w-2xl leading-relaxed lg:mx-0 mx-auto font-medium">
+              Reserve your spot for our most anticipated technical programs. Limited seats available for the 2026 academic year.
+            </p>
+          </div>
+          <Link
+            href="/courses"
+            className="inline-flex items-center gap-2 shrink-0 px-7 py-3.5 bg-[#002147] hover:bg-[#003366] text-white text-sm font-bold rounded-2xl transition-all shadow-lg group"
+          >
+            All Courses
+            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </header>
 
         {courses.length > 0 ? (
