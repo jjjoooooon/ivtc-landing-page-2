@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ScrollReveal from "../Animations/ScrollReveal";
 
 const HeroContent = () => {
@@ -34,9 +35,12 @@ const HeroContent = () => {
                         Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here.
                     </p>
                     <div className="mt-8 md:mt-12 opacity-0 animate-hero-fade-up [animation-delay:800ms]">
-                        <button className="group relative h-12 px-12! bg-[#002147] text-white text-lg font-semibold rounded-3xl hover:bg-[#003366] transition-all shadow-lg flex items-center justify-center">
+                        <Link
+                            href="/#registration"
+                            className="group relative h-12 px-12 bg-[#002147] text-white text-lg font-semibold rounded-3xl hover:bg-[#003366] transition-all shadow-lg flex items-center justify-center w-fit"
+                        >
                             Start Learning
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
