@@ -49,6 +49,20 @@ const PhoneInput = React.memo(({ label, name, value, onChange, placeholder = "12
     setSearch("");
   };
 
+  const displayNumber = useMemo(() => {
+    if (!value || !selectedCountry) return value || "";
+    if (value.startsWith(selectedCountry.code)) {
+      return value.slice(selectedCountry.code.length).trim();
+    }
+    return value;
+  }, [value, selectedCountry]);
+
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    const newValue = val ? `${selectedCountry.code} ${val}` : `${selectedCountry.code} `;
+    onChange({ target: { name, value: newValue } });
+  };
+
   return (
     <div className="space-y-2.5 relative">
       <label className="text-sm font-semibold text-slate-600 dark:text-slate-400">
@@ -131,8 +145,8 @@ const PhoneInput = React.memo(({ label, name, value, onChange, placeholder = "12
            <input
              type="tel"
              name={name}
-             value={value}
-             onChange={onChange}
+             value={displayNumber}
+             onChange={handleInputChange}
              placeholder={placeholder}
              className="w-full h-12 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl pl-11 pr-3 text-sm focus:border-[#002147] dark:focus:border-blue-500 focus:ring-1 focus:ring-[#002147]/30 dark:focus:ring-blue-500/30 outline-none transition-all font-medium"
              required={required}
