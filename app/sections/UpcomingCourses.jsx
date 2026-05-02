@@ -41,7 +41,7 @@ const UPCOMING_COURSES = [
 ];
 
 
-const UpcomingCourses = async () => {
+const UpcomingCourses = async ({ cmsData }) => {
   let courses = [];
 
   try {
@@ -87,13 +87,13 @@ const UpcomingCourses = async () => {
         <header className="course-header mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <ShineBadge className="mb-2 md:mb-0">
-              Starting Soon
+              {cmsData?.badge || "Starting Soon"}
             </ShineBadge>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white leading-[1.15] md:leading-[1.1] mb-4 tracking-tight">
-              Upcoming <span className="text-[#002147] dark:text-blue-400">Intakes</span>
+              {cmsData?.title || "Upcoming Intakes"}
             </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg max-w-2xl leading-relaxed lg:mx-0 mx-auto font-medium">
-              Reserve your spot for our most anticipated technical programs. Limited seats available for the 2026 academic year.
+            <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg max-w-2xl leading-relaxed lg:mx-0 mx-auto font-medium whitespace-pre-line">
+              {cmsData?.subtitle || "Reserve your spot for our most anticipated technical programs. Limited seats available for the 2026 academic year."}
             </p>
           </div>
           <Link

@@ -26,7 +26,7 @@ const CATEGORY_META = {
   },
 };
 
-const CoursePathways = async () => {
+const CoursePathways = async ({ cmsData }) => {
   let categories = [];
 
   try {
@@ -62,16 +62,12 @@ const CoursePathways = async () => {
     <section className="py-18 bg-transparent overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <header className="">
-          <ShineBadge className="mb-4">Upcoming Intakes — 2026</ShineBadge>
+          <ShineBadge className="mb-4">{cmsData?.badge || "Upcoming Intakes — 2026"}</ShineBadge>
           <h2 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight mb-4 tracking-tight">
-            Find the Right{" "}
-            <span className="text-[#002147] dark:text-blue-400">IT Course</span>{" "}
-            for Your Future
+            {cmsData?.title || "Find the Right IT Course for Your Future"}
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg max-w-2xl leading-relaxed">
-            From school leavers to working professionals — IVTC offers IT
-            diplomas, certifications, and degree programs to help you build a
-            successful career in Sri Lanka and beyond.
+          <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg max-w-2xl leading-relaxed whitespace-pre-line">
+            {cmsData?.subtitle || "From school leavers to working professionals — IVTC offers IT diplomas, certifications, and degree programs to help you build a successful career in Sri Lanka and beyond."}
           </p>
         </header>
 

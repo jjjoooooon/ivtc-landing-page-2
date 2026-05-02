@@ -4,7 +4,7 @@ import ShineBadge from "@/components/ui/ShineBadge";
 import RegistrationForm from "../../components/Registration/RegistrationForm";
 import ScrollReveal from "../../components/Animations/ScrollReveal";
 
-const StudentRegistration = async () => {
+const StudentRegistration = async ({ cmsData }) => {
   // Since we want this to be a Server Component, we can't use useScrollReveal here directly for the whole section
   const isVisible = true; 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -24,6 +24,21 @@ const StudentRegistration = async () => {
     console.error("Error fetching pathways on server:", error);
   }
 
+  const benefits = [
+    { 
+      title: cmsData?.benefit_1_title || "Expert Instructors", 
+      desc: cmsData?.benefit_1_desc || "Learn from industry-leading professionals." 
+    },
+    { 
+      title: cmsData?.benefit_2_title || "Recognized Certifications", 
+      desc: cmsData?.benefit_2_desc || "Gain qualifications that stand out globally." 
+    },
+    { 
+      title: cmsData?.benefit_3_title || "Flexible Pathways", 
+      desc: cmsData?.benefit_3_desc || "Tailored programs matching your career goals." 
+    },
+  ];
+
   return (
     <section
       id="registration"
@@ -42,22 +57,18 @@ const StudentRegistration = async () => {
           <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-24">
             <div className="space-y-4">
               <ShineBadge>
-                Official Enrollment Portal
+                {cmsData?.badge || "Official Enrollment Portal"}
               </ShineBadge>
               <h2 className="text-4xl md:text-5xl font-bold lg:text-6xl text-slate-900 dark:text-white leading-[1.1] tracking-tight">
-                Build Your <span className="text-transparent bg-clip-text bg-linear-to-r from-[#002147] to-[#0055aa] dark:from-blue-400 dark:to-blue-600">Future</span> Today.
+                {cmsData?.title || "Build Your Future Today."}
               </h2>
               <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-md leading-relaxed">
-                Take the first step towards a successful career. Fill out the application form to register for your preferred pathway and gain access to world-class resources.
+                {cmsData?.subtitle || "Take the first step towards a successful career. Fill out the application form to register for your preferred pathway and gain access to world-class resources."}
               </p>
             </div>
 
             <div className="space-y-5 pt-4">
-              {[
-                { title: "Expert Instructors", desc: "Learn from industry-leading professionals." },
-                { title: "Recognized Certifications", desc: "Gain qualifications that stand out globally." },
-                { title: "Flexible Pathways", desc: "Tailored programs matching your career goals." },
-              ].map((feature, idx) => (
+              {benefits.map((feature, idx) => (
                 <div key={idx} className="flex items-start gap-4">
                   <div className="mt-1 shrink-0 w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-[#002147] dark:text-blue-400">
                     <CheckCircle size={16} />

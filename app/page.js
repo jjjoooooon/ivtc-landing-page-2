@@ -12,15 +12,37 @@ export const metadata = {
   description: "Sri Lanka's premier campus for A/L ICT, HND, and Global Degree Pathways. Master Software Engineering, Data Science, and Cyber Security with expert-led courses.",
 };
 
-export default function Home() {
+
+async function getCMSData() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return null;
+    
+    const res = await fetch(`${baseUrl}/public/cms/home`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    console.error("Error fetching CMS data:", error);
+    return null;
+  }
+}
+
+export default async function Home() {
+  const cmsData = await getCMSData();
+
   return (
     <>
-      <HeroWithMegaMenu />
+      <HeroWithMegaMenu cmsData={cmsData?.hero} />
       {/* <CampusStats /> */}
-      <UpcomingCourses />
-      <CoursePathways />
+      <UpcomingCourses cmsData={cmsData?.upcoming_intakes} />
+      <CoursePathways cmsData={cmsData?.pathway_section} />
       {/* <LMSLogin /> */}
-      <StudentRegistration />
+      <StudentRegistration cmsData={cmsData?.enrollment} />
     </>
   );
 }
+

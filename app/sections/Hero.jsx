@@ -1,9 +1,9 @@
 import React from "react";
 import HeroContent from "../../components/Hero/HeroContent";
 
-const HeroWithMegaMenu = () => {
+const HeroWithMegaMenu = ({ cmsData }) => {
   return (
-    <HeroContent />
+    <HeroContent data={cmsData} />
   );
 };
 
