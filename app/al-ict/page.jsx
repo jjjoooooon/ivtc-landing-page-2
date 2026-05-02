@@ -12,7 +12,7 @@ export default function Page() {
     <main className="min-h-screen bg-transparent">
       <ALICTHero />
       <ALICTResources />
-      <ALICTArchives />
+      {/* <ALICTArchives /> */}
     </main>
   );
 }
