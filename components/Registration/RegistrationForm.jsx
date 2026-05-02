@@ -22,7 +22,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
   const [programType, setProgramType] = useState("program");
 
   const [formData, setFormData] = useState({
-    fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
+    fullName: "", email: "", phone: "+94 ", nic: "",
     dob: new Date().toISOString().split('T')[0], gender: "", address: "", city: "", district: "",
     postalCode: "", program: "", pathwayId: "", programId: "", school: "",
     registrationType: "",
@@ -115,7 +115,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
         // Optional: Reset form after delay
         setTimeout(() => {
           setFormData({
-            fullName: "", email: "", phone: COUNTRIES[0].code + " ", nic: "",
+            fullName: "", email: "", phone: "+94 ", nic: "",
             dob: new Date().toISOString().split('T')[0], gender: "", address: "", city: "", district: "",
             postalCode: "", program: "", pathwayId: formData.pathwayId, programId: "", school: "",
             registrationType: formData.registrationType,
