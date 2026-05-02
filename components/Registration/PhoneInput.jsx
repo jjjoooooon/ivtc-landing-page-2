@@ -58,7 +58,13 @@ const PhoneInput = React.memo(({ label, name, value, onChange, placeholder = "12
   }, [value, selectedCountry]);
 
   const handleInputChange = (e) => {
-    const val = e.target.value;
+    let val = e.target.value.trim();
+    // Automatically remove leading '0' if user types or pastes a local number starting with 0
+    if (val.startsWith("0")) {
+      val = val.replace(/^0+/, "");
+    }
+    
+    // Optionally remove spaces to just get the digits (if you want only the raw 9 digits, but letting user keep spaces might be okay. We'll just trim the leading zero.)
     const newValue = val ? `${selectedCountry.code} ${val}` : `${selectedCountry.code} `;
     onChange({ target: { name, value: newValue } });
   };
