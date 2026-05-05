@@ -1,27 +1,43 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { MessageSquare, Send, Shields, Clock, Lock, ShieldCheck } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { toast } from "sonner";
 
 const ContactForm = ({ cmsData }) => {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const messageRef = useRef(null);
+  const [token, setToken] = useState("");
+  const turnstileRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!token) {
+      toast.error("Please complete the security check.");
+      return;
+    }
+
     const data = {
       name: nameRef.current?.value,
       email: emailRef.current?.value,
       message: messageRef.current?.value,
+      turnstileToken: token,
     };
+
     console.log("Form Submitted:", data);
-    alert("Message Sent! We will get back to you soon.");
+    toast.success("Message Sent! We will get back to you soon.");
     
     // Reset form
     if (nameRef.current) nameRef.current.value = "";
     if (emailRef.current) emailRef.current.value = "";
     if (messageRef.current) messageRef.current.value = "";
+    
+    // Reset Turnstile
+    setToken("");
+    turnstileRef.current?.reset();
   };
 
   return (
@@ -83,7 +99,25 @@ const ContactForm = ({ cmsData }) => {
             />
           </div>
 
-          <div className="pt-4">
+          {/* Turnstile Integration */}
+          <div className="py-2 flex justify-center md:justify-start">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onSuccess={(token) => setToken(token)}
+              onExpire={() => setToken("")}
+              onError={() => {
+                setToken("");
+                toast.error("Security check failed. Please refresh the page.");
+              }}
+              options={{
+                theme: "auto",
+                size: "normal",
+              }}
+            />
+          </div>
+
+          <div className="pt-2">
             <button 
               type="submit"
               className="w-full h-14 px-12 rounded-full bg-[#002147] hover:bg-[#003366] text-white font-bold text-base transition-all flex items-center justify-center gap-3 group active:scale-[0.98] relative overflow-hidden"
