@@ -20,7 +20,32 @@ import {
 } from "lucide-react";
 import ContactForm from "../../components/Contact/ContactForm";
 
-const ContactPage = () => {
+export const revalidate = 60;
+
+async function getCMSData() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return null;
+    
+    const res = await fetch(`${baseUrl}/public/cms/contact`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    console.error("Error fetching contact CMS data:", error);
+    return null;
+  }
+}
+
+const ContactPage = async () => {
+  const cmsData = await getCMSData();
+  const hero = cmsData?.hero;
+  const info = cmsData?.info;
+  const form = cmsData?.form;
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] transition-colors relative overflow-hidden">
       {/* Static subtle gradient blob — no animation, no GPU cost */}
@@ -44,17 +69,16 @@ const ContactPage = () => {
           {/* Hero Title — matches About page exactly */}
           <h1 className="text-[2.8rem] sm:text-6xl md:text-8xl lg:text-7xl font-bold leading-[1] tracking-tight mb-6 overflow-hidden">
             <div className="pb-1">
-              Let's Engineer
+              {hero?.title?.split(" ").slice(0, 2).join(" ") || "Let's Engineer"}
             </div>
             <div className="text-transparent bg-clip-text bg-linear-to-r from-[#002147] to-blue-600 dark:from-white dark:to-blue-400 pb-1">
-              Legendary Results.
+              {hero?.title?.split(" ").slice(2).join(" ") || "Legendary Results."}
             </div>
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl font-medium leading-relaxed mb-10">
-            Whether you're looking for course details, technical support, or
-            corporate partnerships, our team is standing by to assist you.
+            {hero?.subtitle || "Whether you're looking for course details, technical support, or corporate partnerships, our team is standing by to assist you."}
           </p>
 
           {/* Social proof — static avatars, no external fetch */}
@@ -76,10 +100,10 @@ const ContactPage = () => {
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
-                Expert Support Team
+                {hero?.hero_badge_text || "Expert Support Team"}
               </p>
-              <p className="text-[11px] font-bold text-[#002147] dark:text-blue-400 mt-0.5">
-                Active Now
+              <p className="text-[11px] font-bold text-[#002147] dark:text-blue-400 mt-0.5 uppercase">
+                {hero?.hero_badge_status || "Active Now"}
               </p>
             </div>
           </div>
@@ -98,24 +122,24 @@ const ContactPage = () => {
           {/* --- LEFT SIDE: INFO HUB --- */}
           <div className="lg:col-span-5 space-y-4">
             {[
-              { label: "Contact Numbers", val: "0773536566 / 0703636566", icon: Phone },
-              { label: "Official Email", val: "ivtccampus@gmail.com", icon: Mail },
-              { label: "Digital Presence", val: "www.ivtccampus.lk", icon: Globe },
-            ].map((info, idx) => (
+              { label: "Contact Numbers", val: info ? `${info.phone} / ${info.phone_2}` : "0773536566 / 0703636566", icon: Phone },
+              { label: "Official Email", val: info?.email || "ivtccampus@gmail.com", icon: Mail },
+              { label: "Digital Presence", val: info?.website || "lms.ivtccampus.lk", icon: Globe },
+            ].map((infoItem, idx) => (
               <div
                 key={idx}
                 className="group p-7 bg-slate-50 dark:bg-white/5 rounded-3xl border border-slate-200 dark:border-white/5 hover:border-[#002147]/30 dark:hover:border-blue-500/30 transition-all duration-300 shadow-sm"
               >
                 <div className="flex items-center gap-5">
                   <div className="shrink-0 w-12 h-12 rounded-xl bg-[#002147] dark:bg-[#002147] text-white flex items-center justify-center shadow-md">
-                    <info.icon size={20} />
+                    <infoItem.icon size={20} />
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 leading-none mb-1.5">
-                      {info.label}
+                      {infoItem.label}
                     </p>
                     <p className="font-medium text-slate-900 dark:text-white text-xl leading-tight">
-                      {info.val}
+                      {infoItem.val}
                     </p>
                   </div>
                 </div>
@@ -128,18 +152,16 @@ const ContactPage = () => {
               <MapPin className="absolute -right-4 -bottom-4 w-36 h-36 opacity-[0.06] group-hover/hq:scale-110 transition-transform duration-700" />
               <div className="relative z-10 space-y-5">
                 <h4 className="text-sm font-semibold text-blue-200">Main Office</h4>
-                <p className="text-xl md:text-2xl font-bold leading-tight tracking-tight">
-                  11B/1, Galle Road, Mount Lavinia,
-                  <br />
-                  Dehiwala - Mount Lavinia.
-                </p>
+                <div className="text-xl md:text-2xl font-bold leading-tight tracking-tight whitespace-pre-line">
+                  {info?.address || "11B/1, Galle Road, Mount Lavinia,\nDehiwala - Mount Lavinia."}
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
                     <Clock size={14} className="text-blue-200" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-white/90">Open Mon – Sat</p>
-                    <p className="text-xs text-white/50 mt-0.5">8:30 AM – 5:30 PM</p>
+                    <p className="text-xs text-white/50 mt-0.5">{info?.hours || "8:30 AM – 5:30 PM"}</p>
                   </div>
                 </div>
               </div>
@@ -147,7 +169,7 @@ const ContactPage = () => {
           </div>
 
           {/* --- RIGHT SIDE: FORM --- */}
-          <ContactForm />
+          <ContactForm cmsData={form} />
         </div>
       </div>
     </div>

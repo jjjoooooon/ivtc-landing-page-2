@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { MessageSquare, Send, Shields, Clock, Lock, ShieldCheck } from "lucide-react";
 
-const ContactForm = () => {
+const ContactForm = ({ cmsData }) => {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const messageRef = useRef(null);
@@ -35,10 +35,10 @@ const ContactForm = () => {
           </div>
           <div className="flex flex-col">
             <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Drop a Message
+              {cmsData?.form_title || "Drop a Message"}
             </h3>
             <p className="mt-1 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-              We usually respond within 24 business hours.
+              {cmsData?.form_subtitle || "We usually respond within 24 business hours."}
             </p>
           </div>
         </div>
@@ -89,7 +89,7 @@ const ContactForm = () => {
               className="w-full h-14 px-12 rounded-full bg-[#002147] hover:bg-[#003366] text-white font-bold text-base transition-all flex items-center justify-center gap-3 group active:scale-[0.98] relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="relative z-10">Send Message</span>
+              <span className="relative z-10">{cmsData?.form_btn_text || "Send Message"}</span>
               <Send
                 size={18}
                 className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500"
