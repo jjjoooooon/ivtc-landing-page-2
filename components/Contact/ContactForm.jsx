@@ -8,6 +8,7 @@ import { toast } from "sonner";
 const ContactForm = ({ cmsData }) => {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
+  const subjectRef = useRef(null);
   const messageRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [token, setToken] = useState("");
@@ -30,6 +31,7 @@ const ContactForm = ({ cmsData }) => {
         body: JSON.stringify({
           name: nameRef.current?.value,
           email: emailRef.current?.value,
+          subject: subjectRef.current?.value,
           message: messageRef.current?.value,
           turnstileToken: token,
         }),
@@ -42,6 +44,7 @@ const ContactForm = ({ cmsData }) => {
         // Reset form
         if (nameRef.current) nameRef.current.value = "";
         if (emailRef.current) emailRef.current.value = "";
+        if (subjectRef.current) subjectRef.current.value = "";
         if (messageRef.current) messageRef.current.value = "";
         setToken("");
         turnstileRef.current?.reset();
@@ -103,6 +106,18 @@ const ContactForm = ({ cmsData }) => {
           </div>
 
           <div className="space-y-2">
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">
+              Subject
+            </label>
+            <input
+              ref={subjectRef}
+              required
+              className="w-full h-12 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3 px-4 focus:ring-2 focus:ring-[#002147]/20 focus:border-[#002147] dark:focus:border-blue-500 outline-none transition-all font-medium dark:text-white text-sm"
+              placeholder="How can we help you?"
+            />
+          </div>
+
+          <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-500 ml-1">
               Your Message
             </label>
@@ -111,7 +126,7 @@ const ContactForm = ({ cmsData }) => {
               rows={5}
               required
               className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-4 px-4 focus:ring-2 focus:ring-[#002147]/20 focus:border-[#002147] dark:focus:border-blue-500 outline-none transition-all font-medium dark:text-white resize-none text-sm leading-relaxed"
-              placeholder="How can we help you today?"
+              placeholder="Describe your inquiry in detail..."
             />
           </div>
 

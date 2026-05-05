@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, email, message, turnstileToken } = body;
+    const { name, email, subject, message, turnstileToken } = body;
 
     // 1. Verify Turnstile Token with Cloudflare
     const formData = new FormData();
@@ -37,6 +37,7 @@ export async function POST(request) {
       body: JSON.stringify({
         name,
         email,
+        subject,
         message,
         // We don't send the token to Laravel since we already verified it here
       }),
