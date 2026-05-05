@@ -26,7 +26,7 @@ export async function POST(request) {
 
     // 2. Forward Data to Laravel Backend
     // Note: Replace '/public/contact/submit' with your actual Laravel endpoint if different
-    const laravelUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/contact/submit`;
+    const laravelUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/contact`;
     
     const backendResponse = await fetch(laravelUrl, {
       method: 'POST',
