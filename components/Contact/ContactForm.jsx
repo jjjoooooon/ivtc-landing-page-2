@@ -9,10 +9,11 @@ const ContactForm = ({ cmsData }) => {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const messageRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [token, setToken] = useState("");
   const turnstileRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!token) {
@@ -20,24 +21,39 @@ const ContactForm = ({ cmsData }) => {
       return;
     }
 
-    const data = {
-      name: nameRef.current?.value,
-      email: emailRef.current?.value,
-      message: messageRef.current?.value,
-      turnstileToken: token,
-    };
+    setIsSubmitting(true);
 
-    console.log("Form Submitted:", data);
-    toast.success("Message Sent! We will get back to you soon.");
-    
-    // Reset form
-    if (nameRef.current) nameRef.current.value = "";
-    if (emailRef.current) emailRef.current.value = "";
-    if (messageRef.current) messageRef.current.value = "";
-    
-    // Reset Turnstile
-    setToken("");
-    turnstileRef.current?.reset();
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nameRef.current?.value,
+          email: emailRef.current?.value,
+          message: messageRef.current?.value,
+          turnstileToken: token,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success("Message Sent! We will get back to you soon.");
+        // Reset form
+        if (nameRef.current) nameRef.current.value = "";
+        if (emailRef.current) emailRef.current.value = "";
+        if (messageRef.current) messageRef.current.value = "";
+        setToken("");
+        turnstileRef.current?.reset();
+      } else {
+        toast.error(result.message || "Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -120,14 +136,22 @@ const ContactForm = ({ cmsData }) => {
           <div className="pt-2">
             <button 
               type="submit"
-              className="w-full h-14 px-12 rounded-full bg-[#002147] hover:bg-[#003366] text-white font-bold text-base transition-all flex items-center justify-center gap-3 group active:scale-[0.98] relative overflow-hidden"
+              disabled={isSubmitting}
+              className={`w-full h-14 px-12 rounded-full bg-[#002147] hover:bg-[#003366] text-white font-bold text-base transition-all flex items-center justify-center gap-3 group active:scale-[0.98] relative overflow-hidden ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="relative z-10">{cmsData?.form_btn_text || "Send Message"}</span>
-              <Send
-                size={18}
-                className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500"
-              />
+              <span className="relative z-10">
+                {isSubmitting ? "Sending..." : (cmsData?.form_btn_text || "Send Message")}
+              </span>
+              {!isSubmitting && (
+                <Send
+                  size={18}
+                  className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500"
+                />
+              )}
+              {isSubmitting && (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              )}
             </button>
           </div>
 
