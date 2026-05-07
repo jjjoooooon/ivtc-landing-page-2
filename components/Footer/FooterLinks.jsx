@@ -33,10 +33,49 @@ const footerLinks = [
   },
 ];
 
-const FooterLinks = () => {
+const FooterLinks = ({ cmsData }) => {
+  const buildLinks = () => {
+    if (!cmsData) return footerLinks;
+
+    const columns = [];
+
+    // Process Column 1
+    if (cmsData.col_1?.col_1_title) {
+      const col1Links = Object.keys(cmsData)
+        .filter(key => key.startsWith('col_1_link_'))
+        .map(key => ({
+          name: cmsData[key]?.label,
+          path: cmsData[key]?.href
+        }))
+        .filter(l => l.name && l.path);
+      
+      if (col1Links.length > 0) {
+        columns.push({ title: cmsData.col_1.col_1_title, links: col1Links });
+      }
+    }
+
+    // Process Column 2
+    if (cmsData.col_2?.col_2_title) {
+      const col2Links = Object.keys(cmsData)
+        .filter(key => key.startsWith('col_2_link_'))
+        .map(key => ({
+          name: cmsData[key]?.label,
+          path: cmsData[key]?.href
+        }))
+        .filter(l => l.name && l.path);
+
+      if (col2Links.length > 0) {
+        columns.push({ title: cmsData.col_2.col_2_title, links: col2Links });
+      }
+    }
+
+    return columns.length > 0 ? columns : footerLinks;
+  };
+
+  const displayLinks = buildLinks();
   return (
     <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8 lg:pl-12">
-      {footerLinks.map((col, i) => (
+      {displayLinks.map((col, i) => (
         <div key={i}>
           <h4 className="text-[10px] font-bold uppercase text-white/80 mb-8 tracking-widest">
             {col.title}

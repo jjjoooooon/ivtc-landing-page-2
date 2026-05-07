@@ -1,36 +1,46 @@
 "use client";
 
 import React from "react";
-import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, Twitter } from "lucide-react";
 
-const SOCIALS = [
-  { 
-    id: "fb",
-    icon: Facebook, 
-    url: "https://facebook.com/ivtc.campus", 
-    label: "Facebook",
-  },
-  { 
-    id: "inst",
-    icon: Instagram, 
-    url: "https://instagram.com/ivtc.campus", 
-    label: "Instagram",
-  },
-  { 
-    id: "li",
-    icon: Linkedin, 
-    url: "https://linkedin.com/school/ivtc", 
-    label: "LinkedIn",
-  },
-  { 
-    id: "yt",
-    icon: Youtube, 
-    url: "https://youtube.com/@ivtc", 
-    label: "YouTube",
-  },
-];
-
-const SocialSidebar = () => {
+const SocialSidebar = ({ cmsData }) => {
+  const SOCIAL_LINKS = [
+    { 
+      id: "fb",
+      icon: Facebook, 
+      url: cmsData?.fb_url || "https://facebook.com/ivtc.campus", 
+      label: "Facebook",
+      active: cmsData?.fb_active === "true"
+    },
+    { 
+      id: "inst",
+      icon: Instagram, 
+      url: cmsData?.ig_url || "https://instagram.com/ivtc.campus", 
+      label: "Instagram",
+      active: cmsData?.ig_active === "true"
+    },
+    { 
+      id: "li",
+      icon: Linkedin, 
+      url: cmsData?.li_url || "https://linkedin.com/school/ivtc", 
+      label: "LinkedIn",
+      active: cmsData?.li_active === "true"
+    },
+    { 
+      id: "yt",
+      icon: Youtube, 
+      url: cmsData?.yt_url || "https://youtube.com/@ivtc", 
+      label: "YouTube",
+      active: cmsData?.yt_active === "true"
+    },
+    { 
+      id: "tw",
+      icon: Twitter, 
+      url: cmsData?.tw_url || "https://twitter.com/ivtc", 
+      label: "Twitter",
+      active: cmsData?.tw_active === "true"
+    },
+  ].filter(link => link.active);
   return (
     <div 
       className="fixed right-3 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-6 items-center animate-fade-in [animation-delay:1s]"
@@ -40,10 +50,10 @@ const SocialSidebar = () => {
 
       {/* Icons List */}
       <div className="flex flex-col gap-4">
-        {SOCIALS.map((social) => (
+        {SOCIAL_LINKS.map((social) => (
           <a
             key={social.id}
-            href={social.url}
+            href={social.url || "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative p-2 text-slate-500 hover:text-[#002147] dark:hover:text-blue-400 transition-all duration-300 hover:scale-110"

@@ -42,7 +42,27 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+async function getFooterData() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return null;
+    
+    const res = await fetch(`${baseUrl}/public/cms/footer`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json?.data || null;
+  } catch (error) {
+    console.error("Error fetching footer CMS data:", error);
+    return null;
+  }
+}
+
+export default async function RootLayout({ children }) {
+  const footerData = await getFooterData();
+
   return (
     <html lang="en">
       <body
@@ -54,13 +74,13 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <Navbar />
-          <SocialSidebar />
+          <SocialSidebar cmsData={footerData?.socials} />
           <Toaster position="top-center" richColors />
           {/* <WhatsAppButton /> */}
           <main className="min-h-screen">
             {children}
           </main>
-          <Footer />
+          <Footer cmsData={footerData} />
 
         </ThemeProvider>
       </body>
