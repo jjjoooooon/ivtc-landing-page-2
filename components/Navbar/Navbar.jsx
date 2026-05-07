@@ -31,13 +31,20 @@ const STATIC_MENU = {
   ],
 };
 
-const Navbar = () => {
+const Navbar = ({ categories = [] }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [mobileSubMenu, setMobileSubMenu] = useState(null);
-  const [academicsCategories, setAcademicsCategories] = useState([]);
+  const [academicsCategories, setAcademicsCategories] = useState(categories);
   const pathname = usePathname();
+
+  // Update categories if prop changes
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setAcademicsCategories(categories);
+    }
+  }, [categories]);
 
   // Scroll listener
   useEffect(() => {
@@ -55,24 +62,6 @@ const Navbar = () => {
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Fetch categories for Academics mega-menu
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/categories`
-        );
-        const data = await res.json();
-        if (data?.data) {
-          setAcademicsCategories(data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching nav categories:", error);
-      }
-    };
-    fetchCategories();
   }, []);
 
   const toggleMenu = useCallback(() => {

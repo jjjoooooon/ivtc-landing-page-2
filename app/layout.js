@@ -60,8 +60,29 @@ async function getFooterData() {
   }
 }
 
+async function getCategoriesData() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return [];
+    
+    const res = await fetch(`${baseUrl}/public/categories`, {
+      next: { revalidate: 3600 },
+    });
+    
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data || [];
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
+
 export default async function RootLayout({ children }) {
-  const footerData = await getFooterData();
+  const [footerData, categories] = await Promise.all([
+    getFooterData(),
+    getCategoriesData()
+  ]);
 
   return (
     <html lang="en">
@@ -73,7 +94,7 @@ export default async function RootLayout({ children }) {
           defaultTheme="light"
           disableTransitionOnChange
         >
-          <Navbar />
+          <Navbar categories={categories} />
           <SocialSidebar cmsData={footerData?.socials} />
           <Toaster position="top-center" richColors />
           {/* <WhatsAppButton /> */}
