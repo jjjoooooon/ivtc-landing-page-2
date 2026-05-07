@@ -38,9 +38,9 @@ const AboutGuidelines = () => {
             A structured, safe, and professional environment designed to help you focus entirely on your technical growth.
           </p>
         </div>
-        <Button variant="outline" className="h-14 px-8 rounded-2xl font-semibold  gap-3 border-2">
+        {/* <Button variant="outline" className="h-14 px-8 rounded-2xl font-semibold  gap-3 border-2">
           Download Handbook <Download size={20} />
-        </Button>
+        </Button> */}
       </ScrollReveal>
 
       <div className="policies-grid grid md:grid-cols-2 gap-8">
