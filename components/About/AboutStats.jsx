@@ -4,13 +4,13 @@ import React, { useMemo } from "react";
 import { Users, Target, Building2, Globe } from "lucide-react";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
-const AboutStats = () => {
-  const statsListing = useMemo(() => [
-    { label: "Successful Students", val: "5,000+", icon: Users },
-    { label: "Job Placement", val: "High Rate", icon: Target },
-    { label: "Industry Partners", val: "30+", icon: Building2 },
-    { label: "Learning Hub", val: "Modern", icon: Globe },
-  ], []);
+const AboutStats = ({ cmsData }) => {
+  const statsListing = [
+    { label: cmsData?.stat_1_label || "Successful Students", val: cmsData?.stat_1_val || "5,000+", icon: Users },
+    { label: cmsData?.stat_2_label || "Job Placement", val: cmsData?.stat_2_val || "High Rate", icon: Target },
+    { label: cmsData?.stat_3_label || "Industry Partners", val: cmsData?.stat_3_val || "30+", icon: Building2 },
+    { label: cmsData?.stat_4_label || "Learning Hub", val: cmsData?.stat_4_val || "Modern", icon: Globe },
+  ];
 
   return (
     <section className="relative z-20 max-w-6xl mx-auto px-6 -mt-12 md:-mt-24 mb-32" aria-label="Campus Statistics">

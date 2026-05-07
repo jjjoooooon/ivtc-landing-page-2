@@ -4,7 +4,7 @@ import React from "react";
 import { Rocket } from "lucide-react";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
-const AboutMission = () => {
+const AboutMission = ({ cmsData }) => {
   return (
     <section className="max-w-7xl mx-auto px-6 py-20" aria-labelledby="purpose-heading">
       <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
@@ -30,10 +30,10 @@ const AboutMission = () => {
                   Our Mission
                 </div>
                 <h3 className="text-3xl md:text-5xl font-semibold leading-tight mb-8 tracking-tight">
-                  To provide practical IT training that helps you get a good job.
+                  {cmsData?.mission_title || "To provide practical IT training that helps you get a good job."}
                 </h3>
                 <p className="text-blue-100/70 text-lg font-normal leading-relaxed">
-                  We use modern labs and experienced teachers to make sure you are ready for the IT industry in Sri Lanka and abroad.
+                  {cmsData?.mission_desc || "We use modern labs and experienced teachers to make sure you are ready for the IT industry in Sri Lanka and abroad."}
                 </p>
               </div>
             </div>
@@ -45,10 +45,10 @@ const AboutMission = () => {
                 Our Vision
               </div>
               <h3 className="text-3xl md:text-5xl font-semibold leading-tight mb-8 tracking-tight text-slate-900 dark:text-white">
-                To be the most trusted place for IT education in Sri Lanka.
+                {cmsData?.vision_title || "To be the most trusted place for IT education in Sri Lanka."}
               </h3>
               <p className="text-slate-600 dark:text-slate-400 text-lg font-normal leading-relaxed">
-                We want to help all students learn the skills needed for high-paying tech careers.
+                {cmsData?.vision_desc || "We want to help all students learn the skills needed for high-paying tech careers."}
               </p>
             </div>
           </ScrollReveal>

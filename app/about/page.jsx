@@ -36,19 +36,38 @@ async function getLecturers() {
   }
 }
 
+async function getAboutCMSData() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return null;
+    
+    const res = await fetch(`${baseUrl}/public/cms/about`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json?.data || null;
+  } catch (error) {
+    console.error("Error fetching about CMS data:", error);
+    return null;
+  }
+}
+
 const AboutPage = async () => {
   const lecturers = await getLecturers();
+  const cmsData = await getAboutCMSData();
 
   return (
     <main className="min-h-screen bg-transparent text-slate-900 dark:text-slate-50 selection:bg-[#002147] selection:text-white font-sans overflow-x-clip">
       {/* 1. HERO SECTION (Client Component) */}
-      <AboutHero />
+      <AboutHero cmsData={cmsData?.hero} />
 
       {/* 2. FLOATING STATS PILL (Client Component) */}
-      <AboutStats />
+      <AboutStats cmsData={cmsData?.stats} />
 
       {/* 3. MISSION & VISION (Client Component) */}
-      <AboutMission />
+      <AboutMission cmsData={cmsData?.purpose} />
 
       {/* 4. LEADERSHIP (Server/Mixed) */}
       {/* <section className="py-32 bg-slate-50/50 dark:bg-white/2 backdrop-blur-3xl border-y border-slate-200 dark:border-white/5" aria-labelledby="leadership-heading">
@@ -69,13 +88,20 @@ const AboutPage = async () => {
       <AboutLecturers lecturers={lecturers} />
 
       {/* 6. PARTNERS (Client Component) */}
-      <AboutPartners />
+      <AboutPartners 
+        header={cmsData?.partners_header} 
+        partners={Object.keys(cmsData || {})
+          .filter(key => key.startsWith('partner_'))
+          .map(key => cmsData[key])
+          .filter(p => p && p.logo)
+        } 
+      />
 
       {/* 7. GUIDELINES (Client Component) */}
-      <AboutGuidelines />
+      <AboutGuidelines header={cmsData?.guides_header} guides={[cmsData?.guide_1, cmsData?.guide_2, cmsData?.guide_3, cmsData?.guide_4]} />
 
       {/* 8. CTA (Client Component) */}
-      <AboutCTA />
+      <AboutCTA cmsData={cmsData?.cta} />
     </main>
   );
 };

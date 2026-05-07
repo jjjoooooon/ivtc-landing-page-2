@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import ShineBadge from "@/components/ui/ShineBadge";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
-const AboutHero = () => {
-  return useMemo(() => (
+const AboutHero = ({ cmsData }) => {
+  return (
     <section className="relative min-h-[85vh] flex flex-col justify-center items-center text-center px-6 lg:pt-50 pt-36 pb-32" aria-labelledby="about-hero-title">
       <ScrollReveal className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
         {/* <div>
@@ -25,17 +25,15 @@ const AboutHero = () => {
           className="text-[2.8rem] sm:text-6xl md:text-8xl lg:text-7xl font-bold leading-[1]  mb-6 tracking-tight overflow-hidden"
         >
           <div className="pb-2">
-            Empower Your Future
+            {cmsData?.hero_title?.split(" ").slice(0, 3).join(" ") || "Empower Your Future"}
           </div>
           <div className="text-transparent bg-clip-text bg-linear-to-r from-[#002147] via-blue-700 to-blue-900 dark:from-white dark:via-blue-200 dark:to-blue-400 pb-2">
-            From A/Ls to Beyond.
+            {cmsData?.hero_title?.split(" ").slice(3).join(" ") || "From A/Ls to Beyond."}
           </div>
         </h1>
 
         <p className="text-md md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl font-medium leading-relaxed mb-10">
-          Providing expert A/L ICT classes in Sri Lanka, specialized After A/L
-          diploma programs, and dedicated pathways to help you achieve your
-          Degree and Post-Graduate dreams.
+          {cmsData?.hero_subtitle || "Providing expert A/L ICT classes in Sri Lanka, specialized After A/L diploma programs, and dedicated pathways to help you achieve your Degree and Post-Graduate dreams."}
         </p>
 
         {/* <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
@@ -58,7 +56,7 @@ const AboutHero = () => {
         <ChevronDown size={40} />
       </div>
     </section>
-  ), []);
+  );
 };
 
 export default AboutHero;
