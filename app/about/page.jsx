@@ -5,6 +5,7 @@ import AboutMission from "@/components/About/AboutMission";
 import AboutPartners from "@/components/About/AboutPartners";
 import AboutGuidelines from "@/components/About/AboutGuidelines";
 import AboutCTA from "@/components/About/AboutCTA";
+import AboutLecturers from "@/components/About/AboutLecturers";
 import CompanyStructure from "../Components/CompanyStructure";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
@@ -17,7 +18,27 @@ export const metadata = {
   },
 };
 
-const AboutPage = () => {
+async function getLecturers() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return [];
+    
+    const res = await fetch(`${baseUrl}/public/lecturers`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data?.data || [];
+  } catch (error) {
+    console.error("Error fetching lecturers:", error);
+    return [];
+  }
+}
+
+const AboutPage = async () => {
+  const lecturers = await getLecturers();
+
   return (
     <main className="min-h-screen bg-transparent text-slate-900 dark:text-slate-50 selection:bg-[#002147] selection:text-white font-sans overflow-x-clip">
       {/* 1. HERO SECTION (Client Component) */}
@@ -44,13 +65,16 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* 5. PARTNERS (Client Component) */}
+      {/* 5. LECTURERS SECTION (New) */}
+      <AboutLecturers lecturers={lecturers} />
+
+      {/* 6. PARTNERS (Client Component) */}
       <AboutPartners />
 
-      {/* 6. GUIDELINES (Client Component) */}
+      {/* 7. GUIDELINES (Client Component) */}
       <AboutGuidelines />
 
-      {/* 7. CTA (Client Component) */}
+      {/* 8. CTA (Client Component) */}
       <AboutCTA />
     </main>
   );
