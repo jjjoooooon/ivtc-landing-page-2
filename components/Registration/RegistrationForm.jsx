@@ -12,6 +12,7 @@ import { COUNTRIES } from "./CountriesData";
 const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] }) => {
   // Use the API URL passed from the server, with a fallback to the env variable
   const apiUrl = propApiUrl || process.env.NEXT_PUBLIC_API_BASE_URL;
+  
   const [pathways, setPathways] = useState(initialPathways);
   const [programs, setPrograms] = useState([]);
   const [isLoadingPathways, setIsLoadingPathways] = useState(false);
@@ -28,12 +29,36 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
     registrationType: "",
   });
 
+  // Fetch pathways if not provided by server
+  useEffect(() => {
+    const fetchPathways = async () => {
+      if (initialPathways && initialPathways.length > 0) {
+        setPathways(initialPathways);
+        return;
+      }
+
+      setIsLoadingPathways(true);
+      try {
+        const response = await fetch(`${apiUrl}/public/registration/pathways`);
+        const result = await response.json();
+        if (result.status === "success") {
+          setPathways(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching pathways on client:", error);
+      } finally {
+        setIsLoadingPathways(false);
+      }
+    };
+    fetchPathways();
+  }, [initialPathways, apiUrl]);
+
   // Effect for initial pathway selection if provided via props
   useEffect(() => {
     if (pathways.length > 0 && !activeForm) {
       handlePathwayChange(pathways[0]);
     }
-  }, [pathways]);
+  }, [pathways, activeForm]);
 
   const fetchPrograms = async (pathwayId) => {
     setIsLoadingPrograms(true);

@@ -12,12 +12,15 @@ const StudentRegistration = async ({ cmsData }) => {
   let pathways = [];
   try {
     if (apiUrl) {
-      const res = await fetch(`${apiUrl}/public/pathways`, {
+      console.log("Fetching pathways from server:", `${apiUrl}/public/registration/pathways`);
+      const res = await fetch(`${apiUrl}/public/registration/pathways`, {
         next: { revalidate: 60 }
       });
       if (res.ok) {
         const result = await res.json();
         pathways = result?.data || [];
+      } else {
+        console.error("Pathways API error:", res.status);
       }
     }
   } catch (error) {
