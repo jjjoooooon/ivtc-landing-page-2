@@ -12,7 +12,7 @@ import { COUNTRIES } from "./CountriesData";
 const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] }) => {
   // Use the API URL passed from the server, with a fallback to the env variable
   const apiUrl = propApiUrl || process.env.NEXT_PUBLIC_API_BASE_URL;
-  
+
   const [pathways, setPathways] = useState(initialPathways);
   const [programs, setPrograms] = useState([]);
   const [isLoadingPathways, setIsLoadingPathways] = useState(false);
@@ -169,7 +169,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <label className="text-sm font-bold text-[#002147] dark:text-blue-400 border-b-2 border-[#002147]/20 dark:border-blue-400/20 pb-1 w-fit uppercase tracking-wider">
-              Step 01. Select Pathway
+              Step 01. Select Registration
             </label>
             <span className="text-xs font-bold text-slate-400 italic text-right">Target: {activeTypeData.name}</span>
           </div>
