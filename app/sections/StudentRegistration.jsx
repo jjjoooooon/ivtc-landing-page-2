@@ -12,8 +12,8 @@ const StudentRegistration = async ({ cmsData }) => {
   let pathways = [];
   try {
     if (apiUrl) {
-      console.log("Fetching pathways from server:", `${apiUrl}/public/registration/pathways`);
-      const res = await fetch(`${apiUrl}/public/registration/pathways`, {
+      console.log("Fetching pathways from server:", `${apiUrl}/public/pathways`);
+      const res = await fetch(`${apiUrl}/public/pathways`, {
         next: { revalidate: 60 }
       });
       if (res.ok) {

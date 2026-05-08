@@ -39,7 +39,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
 
       setIsLoadingPathways(true);
       try {
-        const response = await fetch(`${apiUrl}/public/registration/pathways`);
+        const response = await fetch(`${apiUrl}/public/pathways`);
         const result = await response.json();
         if (result.status === "success") {
           setPathways(result.data);
