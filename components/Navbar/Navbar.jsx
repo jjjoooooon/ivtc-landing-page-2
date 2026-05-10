@@ -249,9 +249,9 @@ const Navbar = ({ categories = [] }) => {
           <div className="flex items-center gap-3 z-[110]">
             <Link
               href="/al-ict"
-              className={`hidden lg:flex px-6 py-3 text-sm font-bold rounded-3xl transition-all items-center justify-center border dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white ${isScrolled || pathname !== "/"
-                  ? "border-[#002147] text-[#002147] hover:bg-[#002147] hover:text-white"
-                  : "border-white text-white hover:bg-white hover:text-[#002147]"
+              className={`hidden lg:flex px-6 py-3 text-sm font-bold rounded-3xl transition-all items-center justify-center border ${isScrolled || pathname !== "/"
+                  ? "bg-white text-[#002147] border-slate-200 shadow-sm hover:bg-slate-50"
+                  : "bg-white text-[#002147] border-white hover:bg-slate-50"
                 }`}
             >
               A/L ICT
@@ -407,7 +407,7 @@ const Navbar = ({ categories = [] }) => {
         <div className="p-8 border-t border-slate-100 dark:border-white/5 bg-white/50 dark:bg-black/50 backdrop-blur-md grid grid-cols-2 gap-4">
           <Link
             href="/al-ict"
-            className="h-14 bg-slate-100 dark:bg-white/5 text-[#002147] dark:text-white font-bold rounded-2xl flex items-center justify-center text-base transition-all active:scale-[0.98]"
+            className="h-14 bg-white text-[#002147] border border-slate-200 shadow-sm font-bold rounded-2xl flex items-center justify-center text-base transition-all active:scale-[0.98]"
             onClick={closeMenu}
           >
             A/L ICT
