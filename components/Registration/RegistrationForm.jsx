@@ -9,7 +9,13 @@ import PhoneInput from "./PhoneInput";
 import { SRI_LANKA_DISTRICTS } from "./RegistrationData";
 import { COUNTRIES } from "./CountriesData";
 
-const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] }) => {
+const RegistrationForm = ({ 
+  isVisible, 
+  apiUrl: propApiUrl, 
+  initialPathways = [],
+  defaultPathwaySlug = "",
+  defaultProgramName = ""
+}) => {
   // Use the API URL passed from the server, with a fallback to the env variable
   const apiUrl = propApiUrl || process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -28,6 +34,8 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
     postalCode: "", program: "", pathwayId: "", programId: "", school: "",
     registrationType: "",
   });
+
+  const initialPathwaysLength = initialPathways?.length || 0;
 
   // Fetch pathways if not provided by server
   useEffect(() => {
@@ -51,35 +59,111 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
       }
     };
     fetchPathways();
-  }, [initialPathways, apiUrl]);
+  }, [initialPathwaysLength, apiUrl]);
 
-  // Effect for initial pathway selection if provided via props
+  const [pendingProgramId, setPendingProgramId] = useState(null);
+
+  // Effect for initial pathway selection (including props and query params)
   useEffect(() => {
     if (pathways.length > 0 && !activeForm) {
-      handlePathwayChange(pathways[0]);
-    }
-  }, [pathways, activeForm]);
+      // 1. Check URL query parameters first
+      let searchString = "";
+      if (typeof window !== "undefined") {
+        searchString = window.location.search;
+        if (!searchString && window.location.hash.includes("?")) {
+          searchString = "?" + window.location.hash.split("?")[1];
+        }
+      }
+      
+      const params = new URLSearchParams(searchString);
+      const paramPathway = params.get("pathway");
+      const paramProgramId = params.get("programId");
 
-  const fetchPrograms = async (pathway) => {
+      let targetPathway = null;
+      let overrideProgramId = null;
+
+      if (paramPathway) {
+        targetPathway = pathways.find(p => (p.slug || "").toLowerCase().includes(paramPathway.toLowerCase()));
+        if (targetPathway && paramProgramId) {
+          overrideProgramId = paramProgramId;
+          setPendingProgramId(paramProgramId);
+        }
+      }
+
+      // 2. Fallback to defaultPathwaySlug prop if provided
+      if (!targetPathway && defaultPathwaySlug) {
+        targetPathway = pathways.find(p => (p.slug || "").toLowerCase().includes(defaultPathwaySlug.toLowerCase()));
+      }
+
+      // 3. Select the target pathway, or default to pathways[0]
+      handlePathwayChange(targetPathway || pathways[0], overrideProgramId);
+
+      // 4. Smooth scroll fallback if redirection hash exists
+      if (typeof window !== "undefined" && window.location.hash.includes("registration")) {
+        setTimeout(() => {
+          const element = document.getElementById("registration");
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 500); // Give the page ample time to render
+      }
+    }
+  }, [pathways, activeForm, defaultPathwaySlug]);
+
+  const fetchPrograms = async (pathway, overrideProgramId = null) => {
     setIsLoadingPrograms(true);
     const slug = (pathway.slug || "").toLowerCase();
     try {
       if (!apiUrl) return;
+
+      let fetchedPrograms = [];
+      let type = "program";
 
       // If this pathway is a "courses" type, fetch all public courses instead
       if (slug.includes("course")) {
         const response = await fetch(`${apiUrl}/public/courses`);
         const result = await response.json();
         const coursesList = result?.data?.data || result?.data || [];
-        const mapped = coursesList.map((c) => ({ id: c.id, name: c.name }));
-        setPrograms(mapped);
-        setProgramType("course");
+        fetchedPrograms = coursesList.map((c) => ({ id: c.id, name: c.name }));
+        type = "course";
       } else {
         const response = await fetch(`${apiUrl}/public/registration/programs/${pathway.id}`);
         const result = await response.json();
         if (result.status === "success") {
-          setPrograms(result.data.programs);
-          setProgramType(result.data.type || "program");
+          fetchedPrograms = result.data.programs;
+          type = result.data.type || "program";
+        }
+      }
+
+      setPrograms(fetchedPrograms);
+      setProgramType(type);
+
+      // Pre-select program if overrideProgramId/pendingProgramId is provided
+      const targetProgramId = overrideProgramId || pendingProgramId;
+      if (targetProgramId && fetchedPrograms.length > 0) {
+        const found = fetchedPrograms.find(p => String(p.id) === String(targetProgramId));
+        if (found) {
+          setFormData(prev => ({
+            ...prev,
+            program: found.name,
+            programId: found.id
+          }));
+          // Clear pendingProgramId so it doesn't persist/override subsequent changes
+          setPendingProgramId(null);
+          return; // Skip defaultProgramName selection since we found it by ID
+        }
+      }
+
+      // Pre-select program if defaultProgramName is provided (from prop)
+      if (defaultProgramName && fetchedPrograms.length > 0) {
+        const found = fetchedPrograms.find(p => p.name.toLowerCase() === defaultProgramName.toLowerCase())
+          || fetchedPrograms.find(p => p.name.toLowerCase().includes(defaultProgramName.toLowerCase()));
+        if (found) {
+          setFormData(prev => ({
+            ...prev,
+            program: found.name,
+            programId: found.id
+          }));
         }
       }
     } catch (error) {
@@ -89,7 +173,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
     }
   };
 
-  const handlePathwayChange = (pathway) => {
+  const handlePathwayChange = (pathway, overrideProgramId = null) => {
     setActiveForm(pathway.id);
     setFormData((prev) => ({
       ...prev,
@@ -98,7 +182,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
       program: "",
       programId: ""
     }));
-    fetchPrograms(pathway);
+    fetchPrograms(pathway, overrideProgramId);
   };
 
   const handleInputChange = (e) => {
@@ -220,12 +304,14 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
                         )}>
                           {pathway.name}
                         </h4>
-                        <span className={cn(
-                          "text-xs font-medium truncate block mt-1",
-                          activeForm === pathway.id ? "text-white/50" : "text-slate-400"
-                        )}>
-                          {pathway.description ? (pathway.description.length > 20 ? pathway.description.substring(0, 20) + "..." : pathway.description) : "Learn more"}
-                        </span>
+                        {pathway.description && (
+                          <span className={cn(
+                            "text-xs font-medium truncate block mt-1",
+                            activeForm === pathway.id ? "text-white/50" : "text-slate-400"
+                          )}>
+                            {pathway.description.length > 20 ? pathway.description.substring(0, 20) + "..." : pathway.description}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </button>

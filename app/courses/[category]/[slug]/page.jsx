@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 import CourseMediaGallery from "@/components/Courses/CourseMediaGallery";
 import SanitizedContent from "@/components/Courses/SanitizedContent";
-import { RegisterButtonDesktop, RegisterButtonMobile } from "@/components/Courses/RegistrationModal";
 
 // API Data Fetching - Hybrid Slug/ID Implementation
 async function fetchCourse(identifier) {
@@ -205,18 +204,26 @@ export default async function CourseDetailsPage({ params, searchParams }) {
                        </div>
                      )}
 
-                     <div className="space-y-4">
-                       <RegisterButtonDesktop />
-                       
-                       <div className="space-y-3 pt-6 hidden sm:block">
-                          <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
-                             <CheckCircle2 size={14} className="text-green-500 sm:w-4" /> Professional certification included
-                          </div>
-                          <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
-                             <HelpCircle size={14} className="text-blue-500 sm:w-4" /> 24/7 technical and expert support
-                          </div>
-                       </div>
-                     </div>
+                      <div className="space-y-4">
+                        <Link
+                          href={`/?pathway=course&programId=${course.id}#registration`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-base shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 group transition-all"
+                        >
+                          Complete Registration
+                          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform sm:w-5" />
+                        </Link>
+                        
+                        <div className="space-y-3 pt-6 hidden sm:block">
+                           <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
+                              <CheckCircle2 size={14} className="text-green-500 sm:w-4" /> Professional certification included
+                           </div>
+                           <div className="flex items-center gap-2.5 text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
+                              <HelpCircle size={14} className="text-blue-500 sm:w-4" /> 24/7 technical and expert support
+                           </div>
+                        </div>
+                      </div>
                   </div>
                 </div>
               </ScrollReveal>
@@ -231,7 +238,14 @@ export default async function CourseDetailsPage({ params, searchParams }) {
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight mb-0.5">Total Fee</p>
                 <p className="text-xl font-bold text-slate-900 dark:text-white">Rs. {course.fees}</p>
               </div>
-              <RegisterButtonMobile />
+              <Link
+                href={`/?pathway=course&programId=${course.id}#registration`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 text-center"
+              >
+                Register <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         )}
