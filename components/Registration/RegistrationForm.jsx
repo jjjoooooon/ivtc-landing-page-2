@@ -13,7 +13,7 @@ const RegistrationForm = ({
   isVisible, 
   apiUrl: propApiUrl, 
   initialPathways = [],
-  initialCourses = [],
+  initialProgramsData = {},
   defaultPathwaySlug = "",
   defaultProgramName = ""
 }) => {
@@ -120,13 +120,14 @@ const RegistrationForm = ({
       let fetchedPrograms = [];
       let type = "program";
 
-      // If this pathway is a "courses" type, fetch all public courses instead
-      if (slug.includes("course")) {
-        let coursesList = [];
-        
-        if (initialCourses && initialCourses.length > 0) {
-          coursesList = initialCourses;
-        } else {
+      // Check if we have pre-fetched data from the server
+      if (initialProgramsData && initialProgramsData[pathway.id]) {
+        fetchedPrograms = initialProgramsData[pathway.id].programs;
+        type = initialProgramsData[pathway.id].type;
+      } else {
+        // Fallback to client-side fetch if not available
+        if (slug.includes("course")) {
+          let coursesList = [];
           const response = await fetch(`${apiUrl}/public/courses`, { cache: 'no-store' });
           const result = await response.json();
           
@@ -137,16 +138,16 @@ const RegistrationForm = ({
           } else if (Array.isArray(result)) {
             coursesList = result;
           }
-        }
-        
-        fetchedPrograms = coursesList.map((c) => ({ id: c.id, name: c.name || c.title || "Unnamed Course" }));
-        type = "course";
-      } else {
-        const response = await fetch(`${apiUrl}/public/registration/programs/${pathway.id}`);
-        const result = await response.json();
-        if (result.status === "success" && Array.isArray(result?.data?.programs)) {
-          fetchedPrograms = result.data.programs;
-          type = result.data.type || "program";
+          
+          fetchedPrograms = coursesList.map((c) => ({ id: c.id, name: c.name || c.title || "Unnamed Course" }));
+          type = "course";
+        } else {
+          const response = await fetch(`${apiUrl}/public/registration/programs/${pathway.id}`);
+          const result = await response.json();
+          if (result.status === "success" && Array.isArray(result?.data?.programs)) {
+            fetchedPrograms = result.data.programs;
+            type = result.data.type || "program";
+          }
         }
       }
 

@@ -27,28 +27,46 @@ const StudentRegistration = async ({ cmsData }) => {
     console.error("Error fetching pathways on server:", error);
   }
 
-  let initialCourses = [];
+  let initialProgramsData = {};
   try {
-    if (apiUrl) {
-      console.log("Fetching courses from server:", `${apiUrl}/public/courses`);
-      const res = await fetch(`${apiUrl}/public/courses`, {
-        next: { revalidate: 60 }
-      });
-      if (res.ok) {
-        const result = await res.json();
-        if (result?.data?.data && Array.isArray(result.data.data)) {
-          initialCourses = result.data.data;
-        } else if (result?.data && Array.isArray(result.data)) {
-          initialCourses = result.data;
-        } else if (Array.isArray(result)) {
-          initialCourses = result;
+    if (apiUrl && pathways.length > 0) {
+      console.log("Fetching programs data from server...");
+      const fetchPromises = pathways.map(async (pathway) => {
+        const slug = (pathway.slug || "").toLowerCase();
+        if (slug.includes("course")) {
+          const res = await fetch(`${apiUrl}/public/courses`, { next: { revalidate: 60 } });
+          if (res.ok) {
+            const result = await res.json();
+            let coursesList = [];
+            if (result?.data?.data && Array.isArray(result.data.data)) {
+              coursesList = result.data.data;
+            } else if (result?.data && Array.isArray(result.data)) {
+              coursesList = result.data;
+            } else if (Array.isArray(result)) {
+              coursesList = result;
+            }
+            initialProgramsData[pathway.id] = {
+              programs: coursesList.map(c => ({ id: c.id, name: c.name || c.title || "Unnamed Course" })),
+              type: "course"
+            };
+          }
+        } else {
+          const res = await fetch(`${apiUrl}/public/registration/programs/${pathway.id}`, { next: { revalidate: 60 } });
+          if (res.ok) {
+            const result = await res.json();
+            if (result.status === "success" && Array.isArray(result?.data?.programs)) {
+              initialProgramsData[pathway.id] = {
+                programs: result.data.programs,
+                type: result.data.type || "program"
+              };
+            }
+          }
         }
-      } else {
-        console.error("Courses API error:", res.status);
-      }
+      });
+      await Promise.all(fetchPromises);
     }
   } catch (error) {
-    console.error("Error fetching courses on server:", error);
+    console.error("Error fetching initial programs on server:", error);
   }
 
   const benefits = [
@@ -124,7 +142,7 @@ const StudentRegistration = async ({ cmsData }) => {
             isVisible={isVisible} 
             apiUrl={apiUrl} 
             initialPathways={pathways} 
-            initialCourses={initialCourses}
+            initialProgramsData={initialProgramsData}
           />
         </div>
       </ScrollReveal>
