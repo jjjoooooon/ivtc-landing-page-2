@@ -231,24 +231,6 @@ export default async function CourseDetailsPage({ params, searchParams }) {
           </div>
         </div>
 
-        {course.fees && (
-          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 p-4 pb-safe-offset shadow-[0_-8px_30px_rgb(0,0,0,0.08)]">
-            <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight mb-0.5">Total Fee</p>
-                <p className="text-xl font-bold text-slate-900 dark:text-white">Rs. {course.fees}</p>
-              </div>
-              <Link
-                href={`/?pathway=course&programId=${course.id}#registration`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 text-center"
-              >
-                Register <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        )}
       </main>
     );
   } catch (error) {
