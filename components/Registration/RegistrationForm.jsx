@@ -60,15 +60,27 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
     }
   }, [pathways, activeForm]);
 
-  const fetchPrograms = async (pathwayId) => {
+  const fetchPrograms = async (pathway) => {
     setIsLoadingPrograms(true);
+    const slug = (pathway.slug || "").toLowerCase();
     try {
       if (!apiUrl) return;
-      const response = await fetch(`${apiUrl}/public/registration/programs/${pathwayId}`);
-      const result = await response.json();
-      if (result.status === "success") {
-        setPrograms(result.data.programs);
-        setProgramType(result.data.type || "program");
+
+      // If this pathway is a "courses" type, fetch all public courses instead
+      if (slug.includes("course")) {
+        const response = await fetch(`${apiUrl}/public/courses`);
+        const result = await response.json();
+        const coursesList = result?.data?.data || result?.data || [];
+        const mapped = coursesList.map((c) => ({ id: c.id, name: c.name }));
+        setPrograms(mapped);
+        setProgramType("course");
+      } else {
+        const response = await fetch(`${apiUrl}/public/registration/programs/${pathway.id}`);
+        const result = await response.json();
+        if (result.status === "success") {
+          setPrograms(result.data.programs);
+          setProgramType(result.data.type || "program");
+        }
       }
     } catch (error) {
       console.error("Error fetching programs:", error);
@@ -86,7 +98,7 @@ const RegistrationForm = ({ isVisible, apiUrl: propApiUrl, initialPathways = [] 
       program: "",
       programId: ""
     }));
-    fetchPrograms(pathway.id);
+    fetchPrograms(pathway);
   };
 
   const handleInputChange = (e) => {
