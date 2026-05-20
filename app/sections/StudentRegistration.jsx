@@ -27,6 +27,30 @@ const StudentRegistration = async ({ cmsData }) => {
     console.error("Error fetching pathways on server:", error);
   }
 
+  let initialCourses = [];
+  try {
+    if (apiUrl) {
+      console.log("Fetching courses from server:", `${apiUrl}/public/courses`);
+      const res = await fetch(`${apiUrl}/public/courses`, {
+        next: { revalidate: 60 }
+      });
+      if (res.ok) {
+        const result = await res.json();
+        if (result?.data?.data && Array.isArray(result.data.data)) {
+          initialCourses = result.data.data;
+        } else if (result?.data && Array.isArray(result.data)) {
+          initialCourses = result.data;
+        } else if (Array.isArray(result)) {
+          initialCourses = result;
+        }
+      } else {
+        console.error("Courses API error:", res.status);
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching courses on server:", error);
+  }
+
   const benefits = [
     { 
       title: cmsData?.benefit_1_title || "Expert Instructors", 
@@ -96,7 +120,12 @@ const StudentRegistration = async ({ cmsData }) => {
           </div>
 
           {/* RIGHT COLUMN: The Application Form */}
-          <RegistrationForm isVisible={isVisible} apiUrl={apiUrl} initialPathways={pathways} />
+          <RegistrationForm 
+            isVisible={isVisible} 
+            apiUrl={apiUrl} 
+            initialPathways={pathways} 
+            initialCourses={initialCourses}
+          />
         </div>
       </ScrollReveal>
     </section>

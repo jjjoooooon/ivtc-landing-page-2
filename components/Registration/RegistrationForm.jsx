@@ -13,6 +13,7 @@ const RegistrationForm = ({
   isVisible, 
   apiUrl: propApiUrl, 
   initialPathways = [],
+  initialCourses = [],
   defaultPathwaySlug = "",
   defaultProgramName = ""
 }) => {
@@ -121,16 +122,21 @@ const RegistrationForm = ({
 
       // If this pathway is a "courses" type, fetch all public courses instead
       if (slug.includes("course")) {
-        const response = await fetch(`${apiUrl}/public/courses`, { cache: 'no-store' });
-        const result = await response.json();
-        
         let coursesList = [];
-        if (result?.data?.data && Array.isArray(result.data.data)) {
-          coursesList = result.data.data;
-        } else if (result?.data && Array.isArray(result.data)) {
-          coursesList = result.data;
-        } else if (Array.isArray(result)) {
-          coursesList = result;
+        
+        if (initialCourses && initialCourses.length > 0) {
+          coursesList = initialCourses;
+        } else {
+          const response = await fetch(`${apiUrl}/public/courses`, { cache: 'no-store' });
+          const result = await response.json();
+          
+          if (result?.data?.data && Array.isArray(result.data.data)) {
+            coursesList = result.data.data;
+          } else if (result?.data && Array.isArray(result.data)) {
+            coursesList = result.data;
+          } else if (Array.isArray(result)) {
+            coursesList = result;
+          }
         }
         
         fetchedPrograms = coursesList.map((c) => ({ id: c.id, name: c.name || c.title || "Unnamed Course" }));
