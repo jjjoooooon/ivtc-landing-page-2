@@ -9,6 +9,32 @@ const Footer = ({ cmsData }) => {
   const brandData = cmsData?.brand;
   const bottomData = cmsData?.bottom;
 
+  const getCopyrightText = () => {
+    const text = bottomData?.copyright_text || `© ${new Date().getFullYear()} IVTC CAMPUS. POWERED BY INZEEDO`;
+    const match = text.match(/inzeedo/i);
+    if (match) {
+      const index = match.index;
+      const matchedString = match[0];
+      const before = text.substring(0, index);
+      const after = text.substring(index + matchedString.length);
+      return (
+        <>
+          {before}
+          <a 
+            href="https://inzeedo.lk" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:text-white transition-colors underline"
+          >
+            {matchedString}
+          </a>
+          {after}
+        </>
+      );
+    }
+    return text;
+  };
+
   return (
     <footer className="relative bg-[#0a0a0a] text-white pt-24 pb-8 px-6 md:px-12 border-t border-white/5 overflow-hidden">
       {/* PERFORMANCE FIX: Added 'hidden md:block' to disable the heavy CSS blur on mobile */}
@@ -38,7 +64,7 @@ const Footer = ({ cmsData }) => {
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-slate-500 text-[10px] uppercase flex items-center gap-2 tracking-widest">
-            {bottomData?.copyright_text || `© ${new Date().getFullYear()} IVTC CAMPUS. POWERED BY INZEEDO`}
+            {getCopyrightText()}
           </p>
 
           <div className="flex items-center gap-6 md:gap-8">
