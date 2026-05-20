@@ -211,7 +211,7 @@ export default async function CourseDetailsPage({ params, searchParams }) {
                           rel="noopener noreferrer"
                           className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-base shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 group transition-all"
                         >
-                          Complete Registration
+                          Registration
                           <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform sm:w-5" />
                         </Link>
                         
