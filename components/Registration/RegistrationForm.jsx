@@ -121,21 +121,30 @@ const RegistrationForm = ({
 
       // If this pathway is a "courses" type, fetch all public courses instead
       if (slug.includes("course")) {
-        const response = await fetch(`${apiUrl}/public/courses`);
+        const response = await fetch(`${apiUrl}/public/courses`, { cache: 'no-store' });
         const result = await response.json();
-        const coursesList = result?.data?.data || result?.data || [];
-        fetchedPrograms = coursesList.map((c) => ({ id: c.id, name: c.name }));
+        
+        let coursesList = [];
+        if (result?.data?.data && Array.isArray(result.data.data)) {
+          coursesList = result.data.data;
+        } else if (result?.data && Array.isArray(result.data)) {
+          coursesList = result.data;
+        } else if (Array.isArray(result)) {
+          coursesList = result;
+        }
+        
+        fetchedPrograms = coursesList.map((c) => ({ id: c.id, name: c.name || c.title || "Unnamed Course" }));
         type = "course";
       } else {
         const response = await fetch(`${apiUrl}/public/registration/programs/${pathway.id}`);
         const result = await response.json();
-        if (result.status === "success") {
+        if (result.status === "success" && Array.isArray(result?.data?.programs)) {
           fetchedPrograms = result.data.programs;
           type = result.data.type || "program";
         }
       }
 
-      setPrograms(fetchedPrograms);
+      setPrograms(fetchedPrograms || []);
       setProgramType(type);
 
       // Pre-select program if overrideProgramId/pendingProgramId is provided
