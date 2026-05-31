@@ -22,6 +22,7 @@ const CoursesPage = async ({ searchParams }) => {
   const params = await searchParams;
   const currentCategory = params.category || "all";
   const currentSort = params.sort || "popular";
+  const currentSearch = (params.search || "").toLowerCase().trim();
 
   let fetchedCourses = [];
   let categoryMap = {};
@@ -93,8 +94,17 @@ const CoursesPage = async ({ searchParams }) => {
 
   // Manual Category Filtering (since API doesn't support server-side filter by slug)
   if (currentCategory !== "all") {
-    displayCourses = displayCourses.filter(course => 
+    displayCourses = displayCourses.filter(course =>
       course.categoryId === currentCategory
+    );
+  }
+
+  // Search Filtering
+  if (currentSearch) {
+    displayCourses = displayCourses.filter(course =>
+      course.title?.toLowerCase().includes(currentSearch) ||
+      course.categoryName?.toLowerCase().includes(currentSearch) ||
+      course.tags?.some((tag) => tag.toLowerCase().includes(currentSearch))
     );
   }
 
