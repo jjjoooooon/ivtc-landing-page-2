@@ -24,7 +24,15 @@ const decodeHtml = (html) => {
 
 const HeroContent = ({ data }) => {
     const rawDecoded = data?.description ? decodeHtml(data.description) : "";
-    const decodedDescription = DOMPurify.sanitize(rawDecoded);
+    const decodedDescription = DOMPurify.sanitize(rawDecoded, {
+        ALLOWED_TAGS: [
+            "p", "br", "strong", "em", "u", "s", "span", "a",
+            "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6",
+            "blockquote", "pre", "code", "table", "thead", "tbody",
+            "tr", "th", "td", "img", "div"
+        ],
+        ALLOWED_ATTR: ["href", "target", "src", "alt", "class", "style"]
+    });
 
     return (
         <section className="relative w-full flex justify-center bg-transparent p-0 md:p-6 md:min-h-screen">

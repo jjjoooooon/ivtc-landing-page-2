@@ -16,6 +16,8 @@ import ScrollReveal from "@/components/Animations/ScrollReveal";
 import CourseMediaGallery from "@/components/Courses/CourseMediaGallery";
 import SanitizedContent from "@/components/Courses/SanitizedContent";
 
+export const dynamic = "force-dynamic";
+
 // API Data Fetching - Hybrid Slug/ID Implementation
 async function fetchCourse(identifier) {
   try {
@@ -28,7 +30,7 @@ async function fetchCourse(identifier) {
     const endpoint = `${baseUrl.replace(/\/+$/, '')}/public/courses/${identifier}`;
     
     const res = await fetch(endpoint, {
-      next: { revalidate: 3600 },
+      cache: 'no-store'
     });
 
     if (!res.ok) {
