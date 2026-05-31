@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScrollReveal from "../Animations/ScrollReveal";
+import DOMPurify from "isomorphic-dompurify";
 
 const decodeHtml = (html) => {
     if (!html) return "";
@@ -27,7 +28,8 @@ const decodeHtml = (html) => {
 };
 
 const HeroContent = ({ data }) => {
-    const decodedDescription = data?.description ? decodeHtml(data.description) : "";
+    const rawDecoded = data?.description ? decodeHtml(data.description) : "";
+    const decodedDescription = typeof window !== "undefined" ? DOMPurify.sanitize(rawDecoded) : rawDecoded;
 
     return (
         <section className="relative w-full flex justify-center bg-transparent p-0 md:p-6 md:min-h-screen">
@@ -65,7 +67,9 @@ const HeroContent = ({ data }) => {
                             [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:mb-2
                             [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:mb-2
                             [&_li]:mb-1
-                            [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4 [&_blockquote_p]:inline
+                            [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4
+                            [&_blockquote_p]:block [&_blockquote_p]:mb-2
+                            [&_blockquote_footer]:block [&_blockquote_footer]:mt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:text-slate-400
                             [&_br]:block [&_br]:content-[''] [&_br]:mt-1"
                         dangerouslySetInnerHTML={{ __html: decodedDescription || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here." }}
                     />
