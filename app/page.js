@@ -18,12 +18,20 @@ async function getCMSData() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!baseUrl) return null;
     
+    console.log("Fetching CMS data from:", `${baseUrl}/public/cms/home`);
     const res = await fetch(`${baseUrl}/public/cms/home`, {
-      next: { revalidate: 60 },
+      cache: 'no-store'
     });
     
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error("CMS fetch failed with status:", res.status);
+      return null;
+    }
     const json = await res.json();
+    console.log("CMS Data Hero tagline:", json.data?.hero?.tagline);
+    console.log("CMS Data Hero title:", json.data?.hero?.title);
+    console.log("CMS Data Hero description length:", json.data?.hero?.description?.length);
+    console.log("CMS Data Hero description start:", json.data?.hero?.description?.substring(0, 100));
     return json.data;
   } catch (error) {
     console.error("Error fetching CMS data:", error);

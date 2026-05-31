@@ -4,15 +4,6 @@ import DOMPurify from "isomorphic-dompurify";
 
 const decodeHtml = (html) => {
     if (!html) return "";
-    if (typeof window !== "undefined") {
-        try {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-            return doc.documentElement.textContent || doc.body.textContent || "";
-        } catch (e) {
-            console.error("HTML parsing error", e);
-        }
-    }
     return html
         .replace(/&lt;/g, "<")
         .replace(/&gt;/g, ">")
@@ -24,12 +15,16 @@ const decodeHtml = (html) => {
         .replace(/&rsquo;/g, "’")
         .replace(/&lsquo;/g, "‘")
         .replace(/&ndash;/g, "–")
-        .replace(/&mdash;/g, "—");
+        .replace(/&mdash;/g, "—")
+        .replace(/&#39;/g, "'")
+        .replace(/&apos;/g, "'")
+        .replace(/\r\n/g, "<br />")
+        .replace(/\n/g, "<br />");
 };
 
 const HeroContent = ({ data }) => {
     const rawDecoded = data?.description ? decodeHtml(data.description) : "";
-    const decodedDescription = typeof window !== "undefined" ? DOMPurify.sanitize(rawDecoded) : rawDecoded;
+    const decodedDescription = DOMPurify.sanitize(rawDecoded);
 
     return (
         <section className="relative w-full flex justify-center bg-transparent p-0 md:p-6 md:min-h-screen">
