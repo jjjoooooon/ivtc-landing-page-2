@@ -1,7 +1,34 @@
 import Link from "next/link";
 import ScrollReveal from "../Animations/ScrollReveal";
 
+const decodeHtml = (html) => {
+    if (!html) return "";
+    if (typeof window !== "undefined") {
+        try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            return doc.documentElement.textContent || doc.body.textContent || "";
+        } catch (e) {
+            console.error("HTML parsing error", e);
+        }
+    }
+    return html
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, "&")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&ldquo;/g, "“")
+        .replace(/&rdquo;/g, "”")
+        .replace(/&rsquo;/g, "’")
+        .replace(/&lsquo;/g, "‘")
+        .replace(/&ndash;/g, "–")
+        .replace(/&mdash;/g, "—");
+};
+
 const HeroContent = ({ data }) => {
+    const decodedDescription = data?.description ? decodeHtml(data.description) : "";
+
     return (
         <section className="relative w-full flex justify-center bg-transparent p-0 md:p-6 md:min-h-screen">
             <div className="relative pt-21 md:pt-0 w-full max-w-[1600px] h-[700px] md:h-auto md:aspect-video lg:max-h-[850px] overflow-hidden rounded-none md:rounded-[4rem] shadow-2xl bg-black transform-gpu translate-z-0">
@@ -38,8 +65,9 @@ const HeroContent = ({ data }) => {
                             [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:mb-2
                             [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:mb-2
                             [&_li]:mb-1
+                            [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4 [&_blockquote_p]:inline
                             [&_br]:block [&_br]:content-[''] [&_br]:mt-1"
-                        dangerouslySetInnerHTML={{ __html: data?.description || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here." }}
+                        dangerouslySetInnerHTML={{ __html: decodedDescription || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here." }}
                     />
                     <div className="mt-8 md:mt-12 opacity-0 animate-hero-fade-up [animation-delay:800ms]">
                         <Link
