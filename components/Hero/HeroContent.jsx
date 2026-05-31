@@ -31,7 +31,14 @@ const HeroContent = ({ data }) => {
                         {data?.title || "Empower Your Digital Future."}
                     </h1>
                     <div 
-                        className="mt-6 text-lg md:text-xl text-slate-300 font-medium max-w-2xl leading-relaxed opacity-0 animate-hero-fade-up [animation-delay:600ms]"
+                        className="mt-6 text-lg md:text-xl text-slate-300 font-medium max-w-2xl leading-relaxed opacity-0 animate-hero-fade-up [animation-delay:600ms]
+                            [&_p]:mb-3 [&_p:last-child]:mb-0
+                            [&_strong]:font-bold [&_strong]:text-white
+                            [&_em]:italic
+                            [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:mb-2
+                            [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:mb-2
+                            [&_li]:mb-1
+                            [&_br]:block [&_br]:content-[''] [&_br]:mt-1"
                         dangerouslySetInnerHTML={{ __html: data?.description || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here." }}
                     />
                     <div className="mt-8 md:mt-12 opacity-0 animate-hero-fade-up [animation-delay:800ms]">
