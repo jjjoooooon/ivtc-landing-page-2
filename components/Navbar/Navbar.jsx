@@ -151,11 +151,11 @@ const Navbar = ({ categories = [] }) => {
                 {/* Desktop Mega Menu */}
                 {link.hasMega && activeMenu === link.name && !isMenuOpen && (
                   <div
-                    className={`absolute top-full pt-6 cursor-default ${link.name === "Meerza Foundation" ? "-left-4" : "-left-20"
+                    className={`absolute top-full pt-6 cursor-default ${link.name === "Meerza Foundation" ? "-left-4" : "-left-40"
                       }`}
                   >
                     <div
-                      className={`${link.name === "Meerza Foundation" ? "w-[400px]" : "w-[600px]"
+                      className={`${link.name === "Meerza Foundation" ? "w-[400px]" : "w-[800px]"
                         } bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] p-8 shadow-2xl border border-slate-200 dark:border-white/10 text-left`}
                     >
                       {/* Academics: dynamic categories */}
@@ -163,8 +163,8 @@ const Navbar = ({ categories = [] }) => {
                         <>
                           {academicsCategories.length === 0 ? (
                             // Loading skeleton
-                            <div className="grid grid-cols-2 gap-4">
-                              {[...Array(4)].map((_, i) => (
+                            <div className="grid grid-cols-3 gap-4">
+                              {[...Array(6)].map((_, i) => (
                                 <div
                                   key={i}
                                   className="rounded-3xl bg-slate-100 dark:bg-white/5 p-5 animate-pulse h-20"
@@ -172,7 +172,7 @@ const Navbar = ({ categories = [] }) => {
                               ))}
                             </div>
                           ) : (
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-3 gap-4">
                               {academicsCategories.map((cat) => (
                                 <Link
                                   key={cat.id}
