@@ -25,12 +25,13 @@ const CoursesPage = async ({ searchParams }) => {
 
   let fetchedCourses = [];
   let categoryMap = {};
+  let fetchedCategories = [];
 
   try {
     const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/courses`;
     const catUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/categories`;
     
-    // Parallel fetch for better performance
+    // Parallel fetch for page 1 + categories
     const [coursesRes, catsRes] = await Promise.all([
       fetch(baseUrl, { next: { revalidate: 3600 } }),
       fetch(catUrl, { next: { revalidate: 3600 } })
@@ -39,12 +40,33 @@ const CoursesPage = async ({ searchParams }) => {
     const coursesData = await coursesRes.json();
     const catsData = await catsRes.json();
     
+    // Start with first page results
     fetchedCourses = coursesData?.data?.data || [];
+
+    // Fetch remaining pages if the API paginates (e.g. 23 total, 12 per page)
+    const lastPage = coursesData?.data?.last_page || 1;
+    if (lastPage > 1) {
+      const pagePromises = [];
+      for (let page = 2; page <= lastPage; page++) {
+        pagePromises.push(
+          fetch(`${baseUrl}?page=${page}`, { next: { revalidate: 3600 } })
+            .then((r) => r.json())
+            .then((d) => d?.data?.data || [])
+        );
+      }
+      const remainingPages = await Promise.all(pagePromises);
+      remainingPages.forEach((pageData) => {
+        fetchedCourses = fetchedCourses.concat(pageData);
+      });
+    }
     
     // Create a robust ID -> Slug map from official categories
     catsData?.data?.forEach(cat => {
       categoryMap[cat.id] = cat.slug;
     });
+
+    // Build categories list for filters (server-side, so no client fetch needed)
+    fetchedCategories = catsData?.data || [];
 
   } catch (error) {
     console.error("Error fetching courses data:", error);
@@ -107,7 +129,7 @@ const CoursesPage = async ({ searchParams }) => {
           </p>
         </ScrollReveal>
 
-        <CourseFilters />
+        <CourseFilters categories={fetchedCategories} />
 
         {/* Dynamic Server-Rendered Grid - Increased Density */}
         {displayCourses.length > 0 ? (

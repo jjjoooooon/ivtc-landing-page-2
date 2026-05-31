@@ -1,32 +1,22 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
-const CourseFilters = () => {
+const CourseFilters = ({ categories: rawCategories = [] }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [categories, setCategories] = useState([{ id: "all", name: "All Categories", slug: "all" }]);
+
+  // Prepend the "All Categories" entry to whatever the server passed down
+  const categories = [
+    { id: "all", name: "All Categories", slug: "all" },
+    ...rawCategories,
+  ];
 
   const currentCategory = searchParams.get("category") || "all";
   const currentSort = searchParams.get("sort") || "popular";
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/public/categories`);
-        const data = await res.json();
-        if (data?.data) {
-          setCategories([{ id: "all", name: "All Categories", slug: "all" }, ...data.data]);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   const handleFilterChange = useCallback(
     (key, value) => {
