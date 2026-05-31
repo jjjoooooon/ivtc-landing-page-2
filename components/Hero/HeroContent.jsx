@@ -30,9 +30,10 @@ const HeroContent = ({ data }) => {
                     <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight md:leading-tight max-w-4xl tracking-tight opacity-0 animate-hero-fade-up [animation-delay:400ms]">
                         {data?.title || "Empower Your Digital Future."}
                     </h1>
-                    <p className="mt-6 text-lg md:text-xl text-slate-300 font-medium max-w-2xl leading-relaxed opacity-0 animate-hero-fade-up [animation-delay:600ms]">
-                        {data?.description || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here."}
-                    </p>
+                    <div 
+                        className="mt-6 text-lg md:text-xl text-slate-300 font-medium max-w-2xl leading-relaxed opacity-0 animate-hero-fade-up [animation-delay:600ms]"
+                        dangerouslySetInnerHTML={{ __html: data?.description || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here." }}
+                    />
                     <div className="mt-8 md:mt-12 opacity-0 animate-hero-fade-up [animation-delay:800ms]">
                         <Link
                             href={data?.cta_link || "/#registration"}
