@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import DOMPurify from "isomorphic-dompurify";
 
 const decodeHtml = (html) => {
   if (!html) return "";
@@ -34,17 +33,20 @@ export default function SanitizedContent({ html, className = "" }) {
   useEffect(() => {
     if (html) {
       const decoded = decodeHtml(html);
-      setSanitized(
-        DOMPurify.sanitize(decoded, {
-          ALLOWED_TAGS: [
-            "p", "br", "strong", "em", "u", "s", "span", "a",
-            "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6",
-            "blockquote", "pre", "code", "table", "thead", "tbody",
-            "tr", "th", "td", "img", "div"
-          ],
-          ALLOWED_ATTR: ["href", "target", "src", "alt", "class", "style"]
-        })
-      );
+      import("isomorphic-dompurify").then((mod) => {
+        const DOMPurify = mod.default || mod;
+        setSanitized(
+          DOMPurify.sanitize(decoded, {
+            ALLOWED_TAGS: [
+              "p", "br", "strong", "em", "u", "s", "span", "a",
+              "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6",
+              "blockquote", "pre", "code", "table", "thead", "tbody",
+              "tr", "th", "td", "img", "div"
+            ],
+            ALLOWED_ATTR: ["href", "target", "src", "alt", "class", "style"]
+          })
+        );
+      }).catch(err => console.error("Failed to load DOMPurify", err));
     }
   }, [html]);
 

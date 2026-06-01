@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Clock, Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
-import DOMPurify from "isomorphic-dompurify";
+import SanitizedContent from "@/components/Courses/SanitizedContent";
 
 const CourseCard = ({ course }) => {
   const [imgError, setImgError] = useState(false);
@@ -55,9 +55,9 @@ const CourseCard = ({ course }) => {
             {course?.title}
           </h4>
           
-          <div 
-            className="text-slate-600 dark:text-slate-400 text-[12px] leading-relaxed mb-4 flex-1 font-medium"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(course.desc) }}
+          <SanitizedContent 
+            html={course.desc}
+            className="text-slate-600 dark:text-slate-400 text-[12px] leading-relaxed mb-4 flex-1 font-medium line-clamp-2"
           />
 
           {/* Tags - Improved Readability */}

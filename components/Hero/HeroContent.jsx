@@ -1,39 +1,8 @@
 import Link from "next/link";
 import ScrollReveal from "../Animations/ScrollReveal";
-import DOMPurify from "isomorphic-dompurify";
-
-const decodeHtml = (html) => {
-    if (!html) return "";
-    return html
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"')
-        .replace(/&amp;/g, "&")
-        .replace(/&nbsp;/g, " ")
-        .replace(/&ldquo;/g, "“")
-        .replace(/&rdquo;/g, "”")
-        .replace(/&rsquo;/g, "’")
-        .replace(/&lsquo;/g, "‘")
-        .replace(/&ndash;/g, "–")
-        .replace(/&mdash;/g, "—")
-        .replace(/&#39;/g, "'")
-        .replace(/&apos;/g, "'")
-        .replace(/\r\n/g, "<br />")
-        .replace(/\n/g, "<br />");
-};
+import SanitizedContent from "../Courses/SanitizedContent";
 
 const HeroContent = ({ data }) => {
-    const rawDecoded = data?.description ? decodeHtml(data.description) : "";
-    const decodedDescription = DOMPurify.sanitize(rawDecoded, {
-        ALLOWED_TAGS: [
-            "p", "br", "strong", "em", "u", "s", "span", "a",
-            "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6",
-            "blockquote", "pre", "code", "table", "thead", "tbody",
-            "tr", "th", "td", "img", "div"
-        ],
-        ALLOWED_ATTR: ["href", "target", "src", "alt", "class", "style"]
-    });
-
     return (
         <section className="relative w-full flex justify-center bg-transparent p-0 md:p-6 md:min-h-screen">
             <div className="relative pt-21 md:pt-0 w-full max-w-[1600px] h-[700px] md:h-auto md:aspect-video lg:max-h-[850px] overflow-hidden rounded-none md:rounded-[4rem] shadow-2xl bg-black transform-gpu translate-z-0">
@@ -62,7 +31,7 @@ const HeroContent = ({ data }) => {
                     <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight md:leading-tight max-w-4xl tracking-tight opacity-0 animate-hero-fade-up [animation-delay:400ms]">
                         {data?.title || "Empower Your Digital Future."}
                     </h1>
-                    <div 
+                    <SanitizedContent 
                         className="mt-6 text-lg md:text-xl text-slate-300 font-medium max-w-2xl leading-relaxed opacity-0 animate-hero-fade-up [animation-delay:600ms]
                             [&_p]:mb-3 [&_p:last-child]:mb-0
                             [&_strong]:font-bold [&_strong]:text-white
@@ -74,7 +43,7 @@ const HeroContent = ({ data }) => {
                             [&_blockquote_p]:block [&_blockquote_p]:mb-2
                             [&_blockquote_footer]:block [&_blockquote_footer]:mt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:text-slate-400
                             [&_br]:block [&_br]:content-[''] [&_br]:mt-1"
-                        dangerouslySetInnerHTML={{ __html: decodedDescription || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here." }}
+                        html={data?.description || "Master the digital landscape with Sri Lanka's leading campus for A/L ICT, Higher National Diplomas, and Global Degree Pathways. Your journey to technical excellence starts here."}
                     />
                     <div className="mt-8 md:mt-12 opacity-0 animate-hero-fade-up [animation-delay:800ms]">
                         <Link
