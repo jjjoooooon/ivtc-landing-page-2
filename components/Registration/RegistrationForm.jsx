@@ -239,6 +239,8 @@ const RegistrationForm = ({
       occupation: activeTypeData.slug !== 'al' ? formData.school : "Student"
     };
 
+    console.log("Registration API Payload:", payload);
+
     try {
       if (!apiUrl) throw new Error("API URL not configured");
       const response = await fetch(`${apiUrl}/public/registration/submit`, {
@@ -247,7 +249,12 @@ const RegistrationForm = ({
         body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
+      // Parse JSON to log the response payload
+      const responseData = await response.json();
+      console.log("Registration API Response:", responseData, "Status:", response.status);
+
+      // Using response.ok as well as checking the status inside the response data
+      if (response.ok || responseData?.status === "success") {
         setSubmitStatus("success");
         // Optional: Reset form after delay
         setTimeout(() => {
