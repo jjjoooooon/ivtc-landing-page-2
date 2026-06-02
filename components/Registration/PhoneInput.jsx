@@ -58,13 +58,21 @@ const PhoneInput = React.memo(({ label, name, value, onChange, placeholder = "12
   }, [value, selectedCountry]);
 
   const handleInputChange = (e) => {
-    let val = e.target.value.trim();
+    let val = e.target.value;
+
+    // Remove any non-digit characters to ensure clean phone number format
+    val = val.replace(/\D/g, "");
+
     // Automatically remove leading '0' if user types or pastes a local number starting with 0
     if (val.startsWith("0")) {
       val = val.replace(/^0+/, "");
     }
     
-    // Optionally remove spaces to just get the digits (if you want only the raw 9 digits, but letting user keep spaces might be okay. We'll just trim the leading zero.)
+    // Restrict to exactly 9 digits if the selected country is Sri Lanka (+94)
+    if (selectedCountry.code === "+94") {
+      val = val.slice(0, 9);
+    }
+    
     const newValue = val ? `${selectedCountry.code} ${val}` : `${selectedCountry.code} `;
     onChange({ target: { name, value: newValue } });
   };
