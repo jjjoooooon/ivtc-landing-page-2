@@ -16,7 +16,7 @@ const AboutLecturers = ({ lecturers = [] }) => {
 
       <div className="max-w-7xl mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#002147]/5 dark:bg-white/5 border border-[#002147]/10 dark:border-white/10 rounded-full text-[#002147] dark:text-blue-400 text-xs font-bold uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#002147]/5 dark:bg-white/5 border border-[#002147]/10 dark:border-white/10 rounded-full text-[#002147] dark:text-blue-400 text-sm font-bold  mb-4">
             <GraduationCap size={14} />
             Academic Excellence
           </div>

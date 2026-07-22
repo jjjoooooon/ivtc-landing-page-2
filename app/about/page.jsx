@@ -6,6 +6,7 @@ import AboutPartners from "@/components/About/AboutPartners";
 import AboutGuidelines from "@/components/About/AboutGuidelines";
 import AboutCTA from "@/components/About/AboutCTA";
 import AboutLecturers from "@/components/About/AboutLecturers";
+import AboutStaff from "@/components/About/AboutStaff";
 import CompanyStructure from "../Components/CompanyStructure";
 import ScrollReveal from "@/components/Animations/ScrollReveal";
 
@@ -36,6 +37,24 @@ async function getLecturers() {
   }
 }
 
+async function getStaffs() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) return [];
+    
+    const res = await fetch(`${baseUrl}/public/staffs`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data?.data || [];
+  } catch (error) {
+    console.error("Error fetching staffs:", error);
+    return [];
+  }
+}
+
 async function getAboutCMSData() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -56,6 +75,7 @@ async function getAboutCMSData() {
 
 const AboutPage = async () => {
   const lecturers = await getLecturers();
+  const staffs = await getStaffs();
   const cmsData = await getAboutCMSData();
 
   return (
@@ -86,6 +106,9 @@ const AboutPage = async () => {
 
       {/* 5. LECTURERS SECTION (New) */}
       <AboutLecturers lecturers={lecturers} />
+
+      {/* 5.1 STAFF SECTION (New) */}
+      <AboutStaff staffs={staffs} />
 
       {/* 6. PARTNERS (Client Component) */}
       <AboutPartners 
