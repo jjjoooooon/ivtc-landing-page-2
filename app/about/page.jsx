@@ -12,7 +12,8 @@ import ScrollReveal from "@/components/Animations/ScrollReveal";
 
 export const metadata = {
   title: "About Us | IVTC Campus Sri Lanka",
-  description: "Learn more about IVTC Campus, Sri Lanka's leading tech campus. Our mission is to provide practical IT training that helps you move from A/Ls to high-paying tech careers.",
+  description:
+    "Learn more about IVTC Campus, Sri Lanka's leading tech campus. Our mission is to provide practical IT training that helps you move from A/Ls to high-paying tech careers.",
   openGraph: {
     title: "About Us | IVTC Campus Sri Lanka",
     description: "Discover the mission, vision, and partners of IVTC Campus.",
@@ -23,11 +24,11 @@ async function getLecturers() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!baseUrl) return [];
-    
+
     const res = await fetch(`${baseUrl}/public/lecturers`, {
-      next: { revalidate: 60 },
+      cache: 'no-store',
     });
-    
+
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || [];
@@ -41,11 +42,11 @@ async function getStaffs() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!baseUrl) return [];
-    
+
     const res = await fetch(`${baseUrl}/public/staffs`, {
-      next: { revalidate: 60 },
+      cache: 'no-store',
     });
-    
+
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || [];
@@ -59,11 +60,11 @@ async function getAboutCMSData() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!baseUrl) return null;
-    
+
     const res = await fetch(`${baseUrl}/public/cms/about`, {
-      next: { revalidate: 60 },
+      cache: 'no-store',
     });
-    
+
     if (!res.ok) return null;
     const json = await res.json();
     return json?.data || null;
@@ -111,17 +112,24 @@ const AboutPage = async () => {
       <AboutStaff staffs={staffs} />
 
       {/* 6. PARTNERS (Client Component) */}
-      <AboutPartners 
-        header={cmsData?.partners_header} 
+      <AboutPartners
+        header={cmsData?.partners_header}
         partners={Object.keys(cmsData || {})
-          .filter(key => key.startsWith('partner_'))
-          .map(key => cmsData[key])
-          .filter(p => p && p.logo)
-        } 
+          .filter((key) => key.startsWith("partner_"))
+          .map((key) => cmsData[key])
+          .filter((p) => p && p.logo)}
       />
 
       {/* 7. GUIDELINES (Client Component) */}
-      <AboutGuidelines header={cmsData?.guides_header} guides={[cmsData?.guide_1, cmsData?.guide_2, cmsData?.guide_3, cmsData?.guide_4]} />
+      <AboutGuidelines
+        header={cmsData?.guides_header}
+        guides={[
+          cmsData?.guide_1,
+          cmsData?.guide_2,
+          cmsData?.guide_3,
+          cmsData?.guide_4,
+        ]}
+      />
 
       {/* 8. CTA (Client Component) */}
       <AboutCTA cmsData={cmsData?.cta} />
